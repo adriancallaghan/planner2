@@ -13,14 +13,13 @@ use Zend\InputFilter\InputFilterInterface;
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks 
- * @ORM\Table(name="comments")
- * @property string $message
- * @property string $author
- * @property string $email 
+ * @ORM\Table(name="transaction")
+ * @property string $amount
+ * @property string $reference
  * @property string $dated
  * @property int $id
  */
-class Comment //implements InputFilterAwareInterface 
+class Transaction implements InputFilterAwareInterface 
 {
     
     use \Application\Traits\ReadOnly;
@@ -37,25 +36,22 @@ class Comment //implements InputFilterAwareInterface
 
     
     /** 
-     * @ORM\ManyToOne(targetEntity="Album", inversedBy="comment")
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="transaction")
      */
-    protected $album;
-    
+    protected $account;
     
     /**
-     * @ORM\Column(name="message",type="string")
+     * @ORM\Column(name="amount",type="string")
      */
-    protected $message;
+    protected $amount;
 
-    /**
-     * @ORM\Column(name="author",type="string")
-     */
-    protected $author;
+    
     
     /**
-     * @ORM\Column(name="email",type="string")
+     * @ORM\Column(name="reference",type="string")
      */
-    protected $email;
+    protected $reference;
+
     
     /**
      * @ORM\Column(name="dated", type="datetime")
@@ -76,43 +72,30 @@ class Comment //implements InputFilterAwareInterface
         return $this->id;
     }
     
-    public function setMessage($message = ''){
-        $this->message = $message;
+    public function setAmount($amount = ''){
+        $this->amount = $amount;
         return $this;
     }
     
-    public function getMessage(){
+    public function getAmount(){
         
-        if (!isset($this->message)){
-            $this->setMessage();
+        if (!isset($this->amount)){
+            $this->setAmount();
         }
-        return $this->message;
+        return $this->amount;
     }        
     
-    public function setAuthor($author = 'Anonymous'){
-        $this->author = $author;
+    public function setReference($reference = 'none'){
+        $this->reference = $reference;
         return $this;
     }
     
-    public function getAuthor(){
+    public function getReference(){
         
-        if (!isset($this->author)){
-            $this->setAuthor();
+        if (!isset($this->reference)){
+            $this->setReference();
         }
-        return $this->author;
-    }  
-    
-    public function setEmail($email = 'Not provided'){
-        $this->email = $email;
-        return $this;
-    }
-    
-    public function getEmail(){
-        
-        if (!isset($this->email)){
-            $this->setEmail();
-        }
-        return $this->email;
+        return $this->reference;
     }  
     
     public function setDated($dated = null){
@@ -132,17 +115,17 @@ class Comment //implements InputFilterAwareInterface
         return $this->dated->format('Y-m-d H:i');
     }
 
-    public function setAlbum(Album $album = null){
-        $this->album = $album;
+    public function setAccount(Account $account = null){
+        $this->account = $account;
         return $this;
     }
     
-    public function getAlbum(){
+    public function getAccount(){
         
-        if (!isset($this->album)){
-            $this->setAlbum();
+        if (!isset($this->account)){
+            $this->setAccount();
         }
-        return $this->album;
+        return $this->account;
     }
     
     

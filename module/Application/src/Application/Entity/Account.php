@@ -10,17 +10,17 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface; 
 
 /**
- * A music album.
+ * An account.
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks 
- * @ORM\Table(name="album")
- * @property string $artist
- * @property string $title
- * @property string $comments
+ * @ORM\Table(name="account")
+ * @property string $name
+ * @property string $created
+ * @property string $transactions
  * @property int $id
  */
-class Album implements InputFilterAwareInterface 
+class Account implements InputFilterAwareInterface 
 {
     
     use \Application\Traits\ReadOnly;
@@ -36,25 +36,20 @@ class Album implements InputFilterAwareInterface
     protected $id;
 
     /**
-     * @ORM\Column(name="artist",type="string")
+     * @ORM\Column(name="name",type="string")
      */
-    protected $artist;
-
-    /**
-     * @ORM\Column(name="title",type="string")
-     */
-    protected $title;
-
+    protected $name;
+        
+    /** 
+     * @param \Doctring\Common\Collections\ArrayCollection $property
+     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="account", cascade={"persist", "remove"}) 
+     */    
+    protected $transactions;
+    
     /**
      * @ORM\Column(name="created", type="datetime")
      */
     protected $created;
-        
-    /** 
-     * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="album", cascade={"persist", "remove"}) 
-     */    
-    protected $comments;
     
  /*
     public function __construct(array $options = null) {
@@ -77,33 +72,20 @@ class Album implements InputFilterAwareInterface
         return $this->id;
     }
     
-    public function setArtist($artist = 'Unknown'){
-        $this->artist = $artist;
+    public function setName($name = 'Anonymous'){
+        $this->name = $name;
         return $this;
     }
     
-    public function getArtist(){
+    public function getName(){
         
-        if (!isset($this->artist)){
-            $this->setArtist();
+        if (!isset($this->name)){
+            $this->setName();
         }
-        return $this->artist;
+        return $this->name;
     }
     
-    public function setTitle($title = 'No Title'){
-        $this->title = $title;
-        return $this;
-    }
-    
-    public function getTitle(){
-        
-        if (!isset($this->title)){
-            $this->setTitle();
-        }
-        return $this->title;
-    }
-    
-    
+
     public function setCreated($created = null){
         
         if ($created==null){
@@ -122,40 +104,29 @@ class Album implements InputFilterAwareInterface
     }
         
     
-    public function setComments($comments){
-        $this->comments = $comments;
+    public function setTransactions($transactions){
+        $this->transactions = $transactions;
         return $this;
     }
     
-    public function getComments(){
+    public function getTransactions(){
         
-        if (!isset($this->comments)){            
-            $this->setComments();
+        if (!isset($this->transactions)){            
+            $this->setTransactions();
         }
-        return $this->comments;
+        return $this->transactions;
     }
      
-    public function removeComment(Comment $comment) {
+    public function removeTransaction(Transaction $transaction) {
         
         throw new \Exception('Not implemented'); // deleted by the entity manager
-        /*
-         * $comment->setAlbum($this);
-        $comments = $this->getComments();        
-        $comments[] = $comment;
-        $this->setComments($comment);
-         */
-        //new Collections\ArrayCollection()
-        
-        //$this->comments->removeElement($comment);
-        
-        //$comment->unsetAlbum();
     }
  
-    public function addComment(Comment $comment) {
-        $comment->setAlbum($this);
-        $comments = $this->getComments();        
-        $comments[] = $comment;
-        $this->setComments($comments);
+    public function addTransaction(Transaction $transaction) {
+        $transaction->setAlbum($this);
+        $transactions = $this->getTransactions();        
+        $transactions[] = $transaction;
+        $this->setTransactions($transactions);
         return $this;
     }
     
