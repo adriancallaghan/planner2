@@ -3,23 +3,24 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+//use Doctrine\Common\Collections\ArrayCollection;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface; 
 
 /**
- * A Comment associated with an Album.
+ * An account.
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks 
- * @ORM\Table(name="transaction")
- * @property string $amount
- * @property string $reference
- * @property string $dated
+ * @ORM\Table(name="account")
+ * @property string $name
+ * @property string $created
+ * @property string $transactions
  * @property int $id
  */
-class Transaction implements InputFilterAwareInterface 
+class Tags implements InputFilterAwareInterface 
 {
     
     use \Application\Traits\ReadOnly;
@@ -34,38 +35,29 @@ class Transaction implements InputFilterAwareInterface
      */
     protected $id;
 
-    
-    /** 
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="transaction")
-     */
-    protected $account;
-    
-    
-    /** 
-     * @ORM\ManyToMany(targetEntity="Tags", inversedBy="transaction")
-     */
-    protected $tags;
-    
-    
-    
     /**
-     * @ORM\Column(name="amount",type="string")
+     * @ORM\Column(name="name",type="string")
      */
-    protected $amount;
-
-    
-    
-    /**
-     * @ORM\Column(name="reference",type="string")
-     */
-    protected $reference;
-
-    
-    /**
-     * @ORM\Column(name="dated", type="datetime")
-     */
-    protected $dated;
+    protected $name;
         
+    /** 
+     * @param \Doctring\Common\Collections\ArrayCollection $property
+     * @ORM\ManyToMany(targetEntity="Transaction", mappedBy="tags", cascade={"persist", "remove"}) 
+     */    
+    protected $transactions;
+    
+    /**
+     * @ORM\Column(name="created", type="datetime")
+     */
+    protected $created;
+    
+ /*
+    public function __construct(array $options = null) {
+        
+        $this->setComments(new \Doctrine\Common\Collections\ArrayCollection());
+        
+        return parent::__construct($options);
+    }*/
     
     public function setId($id = 0){
         $this->id = $id;
@@ -80,62 +72,63 @@ class Transaction implements InputFilterAwareInterface
         return $this->id;
     }
     
-    public function setAmount($amount = ''){
-        $this->amount = $amount;
+    public function setName($name = 'Anonymous'){
+        $this->name = $name;
         return $this;
     }
     
-    public function getAmount(){
+    public function getName(){
         
-        if (!isset($this->amount)){
-            $this->setAmount();
+        if (!isset($this->name)){
+            $this->setName();
         }
-        return $this->amount;
-    }        
-    
-    public function setReference($reference = 'none'){
-        $this->reference = $reference;
-        return $this;
+        return $this->name;
     }
     
-    public function getReference(){
-        
-        if (!isset($this->reference)){
-            $this->setReference();
-        }
-        return $this->reference;
-    }  
-    
-    public function setDated($dated = null){
-        
-        if ($dated==null){
-            $dated = new \DateTime("now");
-        }
-        $this->dated = $dated;
-        return $this;
-    }
-    
-    public function getDated(){
-                
-        if (!isset($this->dated)){
-            $this->setDated();
-        }
-        return $this->dated->format('Y-m-d H:i');
-    }
 
-    public function setAccount(Account $account = null){
-        $this->account = $account;
+    public function setCreated($created = null){
+        
+        if ($created==null){
+            $created = new \DateTime("now");
+        }
+        $this->created = $created;
         return $this;
     }
     
-    public function getAccount(){
-        
-        if (!isset($this->account)){
-            $this->setAccount();
+    public function getCreated(){
+                
+        if (!isset($this->created)){
+            $this->setCreated();
         }
-        return $this->account;
+        return $this->created->format('Y-m-d H:i');
+    }
+        
+    
+    public function setTransactions($transactions){
+        $this->transactions = $transactions;
+        return $this;
     }
     
+    public function getTransactions(){
+        
+        if (!isset($this->transactions)){            
+            $this->setTransactions();
+        }
+        return $this->transactions;
+    }
+     
+    public function removeTransaction(Transaction $transaction) {
+        
+        throw new \Exception('Not implemented'); // deleted by the entity manager
+    }
+ 
+    public function addTransaction(Transaction $transaction) {
+        $transaction->setAlbum($this);
+        $transactions = $this->getTransactions();        
+        $transactions[] = $transaction;
+        $this->setTransactions($transactions);
+        return $this;
+    }
     
     
     /** 
@@ -143,10 +136,10 @@ class Transaction implements InputFilterAwareInterface
     */
     public function prePersist()
     {
-        $this->getDated(); // makes sure we have a default time set
+        $this->getCreated(); // makes sure we have a default time set
     }
+            
     
-
     public function setInputFilter(InputFilterInterface $inputFilter = null)
     {
         
@@ -165,7 +158,7 @@ class Transaction implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'message',
+                'name'     => 'artist',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -184,27 +177,8 @@ class Transaction implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'author',
+                'name'     => 'title',
                 'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 100,
-                        ),
-                    ),
-                ),
-            )));
-            
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'email',
-                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
