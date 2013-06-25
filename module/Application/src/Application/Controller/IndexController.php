@@ -17,13 +17,60 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager'); // entity manager
+        $dateOrm = $em->getRepository('Application\Entity\Date'); // orm for date
+        $activityOrm = $em->getRepository('Application\Entity\Activity'); // orm for activity
+        
+        
         /*
-        $albums = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')
-                ->getRepository('Application\Entity\Album')
-                ->findAll();
-*/
+         * 
+         * NEW DATE
+        $newDate = new \Application\Entity\Date();
+        //$newDate->setOptions(array(''));
+        $em->persist($newDate); // set data
+        $em->flush(); // save     
+        
+        var_dump($dateOrm->findAll()->toArray()); 
+           */
+
+        
+        /*
+         * NEW ACTIVITY
+        $date = $dateOrm->findOneById(2);
+        $newActivity = new \Application\Entity\Activity();
+        $newActivity->setOptions(array('comment'=>'test2'));
+        
+        $date->addActivity($newActivity);
+        
+        $em->persist($date); // set data
+        $em->persist($newActivity); // set data
+        $em->flush(); // save    
+        
+        var_dump($date->getActivities()->toArray());
+        */
         
         
+        
+        /*
+         * NEW TRANSACTION DEFINITION FOR ACTIVITY
+         */ 
+        /*
+        $activity = $activityOrm->findOneById(2);
+        $newTransaction = new \Application\Entity\Transaction();
+        $newTransaction->setOptions(array('description'=>'desc1000'));
+        $activity->setTransaction($newTransaction);
+        $em->persist($activity); // set data
+        $em->persist($newTransaction); // set data
+        $em->flush(); // save    
+        
+        var_dump($activity->getTransaction()->toArray());
+        */
+        
+        
+        var_dump($dateOrm->findOneById(2)->getActivities()->toArray()[0]->getTransaction()->toArray());
+        
+        
+        die;
         $transaction_types = array(0=>'payment',1=>'loan',2=>'mobile');
 
         
