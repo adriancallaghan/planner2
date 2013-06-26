@@ -83,10 +83,10 @@ class Transaction extends \Application\Entity\Transaction implements \Doctrine\O
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'inputFilter', 'id', 'description', 'activities', 'frequency', 'day', 'amount', 'reoccuring', 'created', 'active');
+            return array('__isInitialized__', 'inputFilter', 'id', 'description', 'activities', 'account', 'tags', 'frequency', 'day', 'amount', 'reoccuring', 'created', 'active');
         }
 
-        return array('__isInitialized__', 'inputFilter', 'id', 'description', 'activities', 'frequency', 'day', 'amount', 'reoccuring', 'created', 'active');
+        return array('__isInitialized__', 'inputFilter', 'id', 'description', 'activities', 'account', 'tags', 'frequency', 'day', 'amount', 'reoccuring', 'created', 'active');
     }
 
     /**
@@ -234,6 +234,73 @@ class Transaction extends \Application\Entity\Transaction implements \Doctrine\O
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDescription', array());
 
         return parent::getDescription();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAccount(\Application\Entity\Account $account = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAccount', array($account));
+
+        return parent::setAccount($account);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAccount()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAccount', array());
+
+        return parent::getAccount();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTags($tags = array (
+))
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTags', array($tags));
+
+        return parent::setTags($tags);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTags()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTags', array());
+
+        return parent::getTags();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeTag(\Application\Entity\Tag $tag)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTag', array($tag));
+
+        return parent::removeTag($tag);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addTag(\Application\Entity\Tag $tag)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addTag', array($tag));
+
+        return parent::addTag($tag);
     }
 
     /**

@@ -47,7 +47,7 @@ class Transaction implements InputFilterAwareInterface
         
     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="transactions", cascade={"persist", "remove"}) 
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="transaction", cascade={"persist", "remove"}) 
      */  
     protected $activities;
     
@@ -55,12 +55,12 @@ class Transaction implements InputFilterAwareInterface
     /** 
      * @----ORM\ManyToOne(targetEntity="Account", inversedBy="transaction")
      */
-    //protected $account;
+    protected $account;
     
     /** 
      * @---ORM\ManyToMany(targetEntity="Tags", inversedBy="transaction")
      */
-    //protected $tags;
+    protected $tags;
     
     /**
      * @ORM\Column(name="frequency",type="integer")
@@ -119,7 +119,7 @@ class Transaction implements InputFilterAwareInterface
         }
         return $this->description;
     }        
-    /*
+
     public function setAccount(Account $account = null){
         $this->account = $account;
         return $this;
@@ -133,19 +133,32 @@ class Transaction implements InputFilterAwareInterface
         return $this->account;
     }
     
-    public function removeAccount(Account $account) {
+    public function setTags($tags = array()){
+        $this->tags = $tags;
+        return $this;
+    }
+    
+    public function getTags(){
+        
+        if (!isset($this->tags)){            
+            $this->setTags();
+        }
+        return $this->tags;
+    }
+     
+    public function removeTag(Tag $tag) {
         
         throw new \Exception('Not implemented'); // deleted by the entity manager
     }
  
-    public function addAccount(Account $account) {
-        $account->setDate($this);
-        $accounts = $this->getAccounts();        
-        $accounts[] = $account;
-        $this->setAccounts($accounts);
+    public function addTag(Tag $tag) {
+        $tag->setDate($this);
+        $tags = $this->getTags();        
+        $tags[] = $tag;
+        $this->setTags($tags);
         return $this;
-    }*/
-    
+    }
+
     public function setActivities($activities = array()){
         $this->activities = $activities;
         return $this;
