@@ -3,6 +3,9 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilterInterface; 
 
 /**
  * An Account.
@@ -50,9 +53,9 @@ class Account
     
     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="account", cascade={"persist", "remove"}) 
+     * @ORM\OneToMany(targetEntity="Payment", mappedBy="account", cascade={"persist", "remove"}) 
      */ 
-    protected $transactions;
+    protected $payments;
     
     
     
@@ -112,29 +115,29 @@ class Account
         return $this->active;
     } 
     
-    public function setTransactions($transaction = array()){
-        $this->transactions = $transaction;
+    public function setPayments($payment = array()){
+        $this->payments = $payment;
         return $this;
     }
     
-    public function getTransactions(){
+    public function getPayments(){
         
-        if (!isset($this->transactions)){
-            $this->setTransactions();
+        if (!isset($this->payments)){
+            $this->setPayments();
         }
-        return $this->transactions;
+        return $this->payments;
     }
     
-    public function removeTransaction(Transaction $transaction) {
+    public function removePayment(Payment $payment) {
         
         throw new \Exception('Not implemented'); // deleted by the entity manager
     }
  
-    public function addTransaction(Transaction $transaction) {
-        $transaction->setAccount($this);
-        $transactions = $this->getTransactions();        
-        $transactions[] = $transaction;
-        $this->setTransactions($transactions);
+    public function addPayment(Payment $payment) {
+        $payment->setAccount($this);
+        $payments = $this->getPayments();        
+        $payments[] = $payment;
+        $this->setPayments($payments);
         return $this;
     }
     
@@ -146,5 +149,61 @@ class Account
     {
         $this->toArray(); // makes sure we have all default values set
     }
+    
+    
+    
+    public function setInputFilter(InputFilterInterface $inputFilter = null)
+    {
+        
+        if ($inputFilter==null){
+            
+            $inputFilter = new InputFilter();
+
+            $factory = new InputFactory();
+
+            $inputFilter->add($factory->createInput(array(
+                'name'       => 'id',
+                'required'   => true,
+                'filters' => array(
+                    array('name'    => 'Int'),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'name',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 100,
+                        ),
+                    ),
+                ),
+            )));
+
+            
+        }
+        
+        $this->inputFilter = $inputFilter;
+        
+        return $this;
+    }
+
+    public function getInputFilter()
+    {
+        
+        if (!isset($this->inputFilter)) {
+            $this->setInputFilter();        
+        }
+        
+        return $this->inputFilter;
+    } 
 
 }

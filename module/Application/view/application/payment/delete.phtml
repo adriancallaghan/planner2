@@ -1,0 +1,29 @@
+<?php
+$title = 'Delete payment';
+$this->headTitle($title);
+?>
+
+<div class="row">
+
+    <div class="span10 container well well-large">
+        <h4><?php echo $this->escapeHtml($title); ?></h4>
+        <h5>
+            Are you sure that you want to delete
+            '<?php echo $this->escapeHtml($payment->description); ?>' of 
+            '&pound;<?php echo $this->escapeHtml($payment->amount); ?>?
+        </h5>
+
+        <?php
+        $url = $this->url('payments', array(
+            'action' => 'delete',
+            'id'     => $this->id,
+        ));
+        ?>
+        <form action="<?php echo $url; ?>" method="post">
+            <input type="hidden" name="id" value="<?php echo (int) $payment->id; ?>" />
+            <input type="submit" name="del" value="Yes" class="btn btn-large btn-success" />
+            <input type="submit" name="del" value="No" class="btn btn-large btn-danger" />
+        </form>
+    </div>
+    
+</div>

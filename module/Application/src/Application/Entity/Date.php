@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="date")
  * @property int $id
  * @property string $date
- * @property string $activity
+ * @property string $transaction
  */
 class Date 
 {
@@ -38,9 +38,9 @@ class Date
 
     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="date", cascade={"persist", "remove"}) 
+     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="date", cascade={"persist", "remove"}) 
      */  
-    protected $activities;
+    protected $transactions;
 
 
     
@@ -74,29 +74,29 @@ class Date
         return $this->date->format('Y-m-d H:i');
     }
 
-    public function setActivities($activities){
-        $this->activities = $activities;
+    public function setTransactions($transactions){
+        $this->transactions = $transactions;
         return $this;
     }
     
-    public function getActivities(){
+    public function getTransactions(){
         
-        if (!isset($this->activities)){            
-            $this->setActivities();
+        if (!isset($this->transactions)){            
+            $this->setTransactions();
         }
-        return $this->activities;
+        return $this->transactions;
     }
      
-    public function removeActivity(Activity $activity) {
+    public function removeTransaction(Transaction $transaction) {
         
         throw new \Exception('Not implemented'); // deleted by the entity manager
     }
  
-    public function addActivity(Activity $activity) {
-        $activity->setDate($this);
-        $activities = $this->getActivities();        
-        $activities[] = $activity;
-        $this->setActivities($activities);
+    public function addTransaction(Transaction $transaction) {
+        $transaction->setDate($this);
+        $transactions = $this->getTransactions();        
+        $transactions[] = $transaction;
+        $this->setTransactions($transactions);
         return $this;
     }
     

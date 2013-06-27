@@ -18,21 +18,19 @@ class IndexController extends AbstractActionController
     {
         
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager'); // entity manager
-        $dateOrm = $em->getRepository('Application\Entity\Date'); // orm for date
-        $activityOrm = $em->getRepository('Application\Entity\Activity'); // orm for activity
+        $dateOrm = $em->getRepository('Application\Entity\Date'); // orm for date        
         $transactionOrm = $em->getRepository('Application\Entity\Transaction'); // orm for transaction
-        $accountOrm = $em->getRepository('Application\Entity\Account'); // orm for transaction
+        $paymentOrm = $em->getRepository('Application\Entity\Payment'); // orm for payment
+        $accountOrm = $em->getRepository('Application\Entity\Account'); // orm for account
         
-        
-        
+ 
         return new ViewModel(array(
             'dates' => $dateOrm->findAll(),
             'accounts' => $accountOrm->findAll(),
             ));
-        
-        
-        
-          
     }
+    
+    
+    
         
 }

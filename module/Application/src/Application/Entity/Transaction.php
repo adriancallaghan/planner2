@@ -9,21 +9,18 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface; 
 
 /**
- * A Transaction associated with activity.
+ * A Comment associated with an Album.
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks 
  * @ORM\Table(name="transaction")
  * @property int $id
- * @property text $description
- * @property integer $account
- * @property integer $tags
- * @property integer $frequency
- * @property integer $day
+ * @property int $date
+ * @property int $payment 
+ * @property text $comment
  * @property float $amount
- * @property boolean $reoccuring
- * @property string $created
  * @property boolean $active
+ * @property datetime $created
  */
 class Transaction implements InputFilterAwareInterface 
 {
@@ -40,37 +37,20 @@ class Transaction implements InputFilterAwareInterface
      */
     protected $id;
 
-    /**
-     * @ORM\Column(name="description",type="string")
-     */
-    protected $description;
-        
     /** 
-     * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="transaction", cascade={"persist", "remove"}) 
-     */  
-    protected $activities;
-    
-    
+     * @ORM\ManyToOne(targetEntity="Date", inversedBy="transactions")
+     */
+    protected $date;
+
     /** 
-     * @----ORM\ManyToOne(targetEntity="Account", inversedBy="transaction")
+     * @ORM\ManyToOne(targetEntity="Payment", inversedBy="transactions")
      */
-    protected $account;
-    
-    /** 
-     * @---ORM\ManyToMany(targetEntity="Tags", inversedBy="transaction")
-     */
-    protected $tags;
-    
-    /**
-     * @ORM\Column(name="frequency",type="integer")
-     */
-    protected $frequency;
+    protected $payment;
 
     /**
-     * @ORM\Column(name="day",type="integer")
+     * @ORM\Column(name="comment",type="text")
      */
-    protected $day;
+    protected $comment;
     
     /**
      * @ORM\Column(name="amount",type="float")
@@ -78,24 +58,18 @@ class Transaction implements InputFilterAwareInterface
     protected $amount;
     
     /**
-     * @ORM\Column(name="reocurring",type="boolean")
+     * @ORM\Column(name="active", type="boolean")
      */
-    protected $reoccuring;
-    
+    protected $active;
+
     /**
      * @ORM\Column(name="created", type="datetime")
      */
     protected $created;
-    
-    /**
-     * @ORM\Column(name="active",type="boolean")
-     */
-    protected $active;
-    
         
     
     public function setId($id = 0){
-        $this->id = $id;
+        $this->id = (int) $id;
         return $this;
     }
     
@@ -105,115 +79,49 @@ class Transaction implements InputFilterAwareInterface
             $this->setId();
         }
         return $this->id;
-    }
+    }     
     
-    public function setDescription($description = ''){
-        $this->description = $description;
+    public function setDate(Date $date = null){
+        $this->date = $date;
         return $this;
     }
     
-    public function getDescription(){
+    public function getDate(){
         
-        if (!isset($this->description)){
-            $this->setDescription();
+        if (!isset($this->date)){
+            $this->setDate();
         }
-        return $this->description;
-    }        
-
-    public function setAccount(Account $account = null){
-        $this->account = $account;
+        return $this->date;
+    }
+        
+    public function setPayment(Payment $payment = null){
+        $this->payment = $payment;
         return $this;
     }
     
-    public function getAccount(){
+    public function getPayment(){
         
-        if (!isset($this->account)){
-            $this->setAccount();
+        if (!isset($this->payment)){
+            $this->setPayment();
         }
-        return $this->account;
+        return $this->payment;
     }
     
-    public function setTags($tags = array()){
-        $this->tags = $tags;
+    
+    public function setComment($comment = ''){
+        $this->comment = (string) $comment;
         return $this;
     }
     
-    public function getTags(){
+    public function getComment(){
         
-        if (!isset($this->tags)){            
-            $this->setTags();
+        if (!isset($this->comment)){
+            $this->setComment();
         }
-        return $this->tags;
-    }
-     
-    public function removeTag(Tag $tag) {
-        
-        throw new \Exception('Not implemented'); // deleted by the entity manager
-    }
- 
-    public function addTag(Tag $tag) {
-        $tag->setDate($this);
-        $tags = $this->getTags();        
-        $tags[] = $tag;
-        $this->setTags($tags);
-        return $this;
-    }
-
-    public function setActivities($activities = array()){
-        $this->activities = $activities;
-        return $this;
-    }
+        return $this->comment;
+    }  
     
-    public function getActivities(){
-        
-        if (!isset($this->activities)){            
-            $this->setActivities();
-        }
-        return $this->activities;
-    }
-     
-    public function removeActivity(Activity $activity) {
-        
-        throw new \Exception('Not implemented'); // deleted by the entity manager
-    }
- 
-    public function addActivity(Activity $activity) {
-        $activity->setDate($this);
-        $activities = $this->getActivities();        
-        $activities[] = $activity;
-        $this->setActivities($activities);
-        return $this;
-    }
-    
-    
-    
-    public function setFrequency($frequency = 0){
-        $this->frequency = (int) $frequency;
-        return $this;
-    }
-    
-    public function getFrequency(){
-        
-        if (!isset($this->frequency)){
-            $this->setFrequency();
-        }
-        return $this->frequency;
-    } 
-  
-    public function setDay($day = 1){
-        $this->day = (int) $day;
-        return $this;
-    }
-    
-    public function getDay(){
-        
-        if (!isset($this->day)){
-            $this->setDay();
-        }
-        return $this->day;
-    } 
-    
-    public function setAmount($amount = 0.00){
+    public function setAmount($amount = '0'){
         $this->amount = (float) $amount;
         return $this;
     }
@@ -226,18 +134,17 @@ class Transaction implements InputFilterAwareInterface
         return $this->amount;
     } 
     
-    
-    public function setReoccuring($reoccuring = false){
-        $this->reoccuring = (bool) $reoccuring;
+    public function setActive($active = true){
+        $this->active = (bool) $active;
         return $this;
     }
     
-    public function getReoccuring(){
+    public function getActive(){
         
-        if (!isset($this->reoccuring)){
-            $this->setReoccuring();
+        if (!isset($this->active)){
+            $this->setActive();
         }
-        return $this->reoccuring;
+        return $this->active;
     } 
     
     public function setCreated($created = null){
@@ -257,19 +164,6 @@ class Transaction implements InputFilterAwareInterface
         return $this->created->format('Y-m-d H:i');
     }
 
-    public function setActive($active = true){
-        $this->active = (bool) $active;
-        return $this;
-    }
-    
-    public function getActive(){
-        
-        if (!isset($this->active)){
-            $this->setActive();
-        }
-        return $this->active;
-    } 
-    
     
     /** 
     *  @ORM\PrePersist 

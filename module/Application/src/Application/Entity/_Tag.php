@@ -50,9 +50,9 @@ class Tag
     
     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\ManyToMany(targetEntity="Transaction", mappedBy="tag", cascade={"persist", "remove"}) 
+     * @ORM\ManyToMany(targetEntity="Payment", mappedBy="tag", cascade={"persist", "remove"}) 
      */ 
-    protected $transactions;
+    protected $payments;
 
     
     public function setId($id = 0){
@@ -111,29 +111,29 @@ class Tag
         return $this->active;
     } 
     
-    public function setTransaction(Transaction $transaction = null){
-        $this->transaction = $transaction;
+    public function setPayment(Payment $payment = null){
+        $this->payment = $payment;
         return $this;
     }
     
-    public function getTransaction(){
+    public function getPayment(){
         
-        if (!isset($this->transaction)){
-            $this->setTransaction();
+        if (!isset($this->payment)){
+            $this->setPayment();
         }
-        return $this->transaction;
+        return $this->payment;
     }
     
-    public function removeTransaction(Transaction $transaction) {
+    public function removePayment(Payment $payment) {
         
         throw new \Exception('Not implemented'); // deleted by the entity manager
     }
  
-    public function addTransaction(Transaction $transaction) {
-        $transaction->setAccount($this);
-        $transactions = $this->getTransactions();        
-        $transactions[] = $transaction;
-        $this->setTransactions($transactions);
+    public function addPayment(Payment $payment) {
+        $payment->setAccount($this);
+        $payments = $this->getPayments();        
+        $payments[] = $payment;
+        $this->setPayments($payments);
         return $this;
     }
     

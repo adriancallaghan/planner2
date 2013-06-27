@@ -10,6 +10,14 @@
 namespace Application;
 
 return array(
+    
+    'controllers' => array(
+        'invokables' => array(
+            'Application\Controller\Index'   => 'Application\Controller\IndexController',
+            'Application\Controller\Payment' => 'Application\Controller\PaymentController',
+            'Application\Controller\Account' => 'Application\Controller\AccountController',
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(
@@ -21,18 +29,195 @@ return array(
                         'action'     => 'index',
                     ),
                 ),
-            ),           
-            
+            ), 
+            'dates' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/date[/:action][/:id][/]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Date',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'transactions' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/transaction[/:action][/:id][/]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Transaction',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'payments' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/payment[/:action][/:id][/]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Payment',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'accounts' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/account[/:action][/:id][/]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Account',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),  
+            'tags' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/tag[/:action][/:id][/]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Tag',
+                        'action'     => 'index',
+                    ),
+                ),
+            ), 
         ),
     ),
+
+    
     'navigation' => array(
         'default' => array(
-            array(
+            'Home' => array(
                 'label' => 'Home',
-                'route' => 'home',
+                'route' => 'home',                
+            ),
+            'dates' => array(
+                'label' => 'Dates',
+                'route' => 'dates',
+                'pages' => array(
+                    array(
+                        'label' => 'Add',
+                        'route' => 'dates',
+                        'action' => 'add',
+                    ),
+                    array(
+                        'label' => 'Edit',
+                        'route' => 'dates',
+                        'action' => 'edit',
+                    ),
+                    array(
+                        'label' => 'Delete',
+                        'route' => 'dates',
+                        'action' => 'delete',
+                    ),
+                )
+            ), 
+            'transactions' => array(
+                'label' => 'Transactions',
+                'route' => 'transactions',
+                'pages' => array(
+                    array(
+                        'label' => 'Add',
+                        'route' => 'transactions',
+                        'action' => 'add',
+                    ),
+                    array(
+                        'label' => 'Edit',
+                        'route' => 'transactions',
+                        'action' => 'edit',
+                    ),
+                    array(
+                        'label' => 'Delete',
+                        'route' => 'transactions',
+                        'action' => 'delete',
+                    ),
+                )
+            ), 
+            'payments' => array(
+                'label' => 'Payments',
+                'route' => 'payments',
+                'pages' => array(
+                    array(
+                        'label' => 'Add',
+                        'route' => 'payments',
+                        'action' => 'add',
+                    ),
+                    array(
+                        'label' => 'Edit',
+                        'route' => 'payments',
+                        'action' => 'edit',
+                    ),
+                    array(
+                        'label' => 'Delete',
+                        'route' => 'payments',
+                        'action' => 'delete',
+                    ),
+                )
+            ), 
+            'accounts' => array(
+                'label' => 'Accounts',
+                'route' => 'accounts',
+                'pages' => array(
+                    array(
+                        'label' => 'Add',
+                        'route' => 'accounts',
+                        'action' => 'add',
+                    ),
+                    array(
+                        'label' => 'Edit',
+                        'route' => 'accounts',
+                        'action' => 'edit',
+                    ),
+                    array(
+                        'label' => 'Delete',
+                        'route' => 'accounts',
+                        'action' => 'delete',
+                    ),
+                )
+            ), 
+            'tags' => array(
+                'label' => 'Tags',
+                'route' => 'tags',
+                'pages' => array(
+                    array(
+                        'label' => 'Add',
+                        'route' => 'tags',
+                        'action' => 'add',
+                    ),
+                    array(
+                        'label' => 'Edit',
+                        'route' => 'tags',
+                        'action' => 'edit',
+                    ),
+                    array(
+                        'label' => 'Delete',
+                        'route' => 'tags',
+                        'action' => 'delete',
+                    ),
+                )
             ),
         ),
     ),
+    
     'service_manager' => array(
         'factories' => array(
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
@@ -57,14 +242,7 @@ return array(
                 'pattern'  => '%s.mo',
             ),
         ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController',
-            //'Application\Controller\Test' => 'Application\Controller\TestController',
-            //'Application\Controller\Object' => 'Application\Controller\ObjectController'
-        ),
-    ),
+    ),    
     'view_manager' => array(
         'display_not_found_reason' => true,
         'display_exceptions'       => true,

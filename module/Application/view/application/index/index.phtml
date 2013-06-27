@@ -2,8 +2,7 @@
 
 
 <h3>Dates</h3>
-<p>Transactions are master definitions, that have accounts and tags</p>
-<p>Activity relates to a master transaction definition, but also has a unique amount, comment and date</p>
+<p>Dates have Transactions, that relate to payments, that have accounts and Tags</p>
 <table class="table table-bordered">
     <?php foreach($this->dates AS $date): ?>
 
@@ -13,21 +12,21 @@
             <td>
                 <table class="table table-bordered table-condensed table-hover table-striped">                    
                     <tr>
-                        <th>Activity ID</th>
                         <th>Transaction ID</th>
+                        <th>Payment REF</th>
                         <th>Amount</th>
                         <th>Description</th>
                         <th>Comment</th>
                         <th>Account</th>
                     </tr>
-                    <?php foreach($date->activities AS $activity) : ?>                  
+                    <?php foreach($date->transactions AS $transaction) : ?>                  
                         <tr>
-                            <td><?php echo $activity->id; ?></td>
-                            <td><?php echo $activity->transaction->id; ?></td>
-                            <td>&pound;<?php echo $activity->amount; ?></td>
-                            <td><?php echo $activity->transaction->description; ?></td>
-                            <td><?php echo $activity->comment; ?></td>
-                            <td><?php echo @$activity->transaction->account->name; ?></td>
+                            <td><?php echo $transaction->id; ?></td>
+                            <td><?php echo $transaction->payment->id; ?></td>
+                            <td>&pound;<?php echo $transaction->amount; ?></td>
+                            <td><?php echo $transaction->payment->description; ?></td>
+                            <td><?php echo $transaction->comment; ?></td>
+                            <td><?php echo @$transaction->payment->account->name; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>

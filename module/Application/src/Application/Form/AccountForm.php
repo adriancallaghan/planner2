@@ -6,12 +6,12 @@ use Zend\Form\Form;
 
 
 
-class AlbumForm extends Form
+class AccountForm extends Form
 {
     public function __construct($name = null)
     {
         // we want to ignore the name passed
-        parent::__construct('album');
+        parent::__construct('account');
         $this->setAttribute('method', 'post');
         $this->add(array(
             'name' => 'id',
@@ -20,21 +20,27 @@ class AlbumForm extends Form
             ),
         ));
         $this->add(array(
-            'name' => 'title',
+            'name' => 'name',
             'attributes' => array(
                 'type'  => 'text',
             ),
             'options' => array(
-                'label' => 'Title',
+                'label' => 'Name',
+                'autocomplete'=>'off',
             ),
         ));
-        $this->add(array(
-            'name' => 'artist',
-            'attributes' => array(
-                'type'  => 'text',
+        $this->add(array(     
+            'type' => 'Zend\Form\Element\Checkbox',       
+            'name' => 'active',
+            'attributes' =>  array(             
+                'options' => array(
+                    '1' => '1',
+                ),
+                'value'=>'1',
             ),
             'options' => array(
-                'label' => 'Artist',
+                'label' => 'Active',
+                'autocomplete'=>'off',                
             ),
         ));
         $this->add(array(

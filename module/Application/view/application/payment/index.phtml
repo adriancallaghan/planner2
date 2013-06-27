@@ -1,0 +1,78 @@
+
+
+
+<?php $this->headTitle($this->title); ?>
+
+
+
+<div class="row">
+           
+    <div class="span8 pull-left">
+        <h4><?php echo $this->escapeHtml($this->title); ?></h4>
+        <h5>
+            <span class="icon-list"></span> 
+            <?php 
+                echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' payment' : $count.' payments'; 
+            ?>            
+        </h5>
+    </div>
+
+
+    <div class="span4 pull-right">
+        <div class="pagination pagination-right">
+            <?php // add at the end of the file after the table
+            echo $this->paginationControl(
+                // the paginator admin
+                $this->paginator,
+                'sliding',
+                // the partial to use to render the control
+                array('partial/paginator.phtml', 'Account'),
+                // the route to link to when a user clicks a control link
+                array(
+                    'route' => 'payments'
+                )
+            );
+            ?>
+        </div>
+    </div>
+
+
+    <div class="content span12">
+
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Created</th>
+                <th>Active</th>
+                <th>Frequency</th>
+                <th>Account</th>
+                <th><a href="<?php echo $this->url('payments', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
+            </tr>
+            <?php foreach ($this->paginator as $payment) : ?>
+                <tr <?php echo !$payment->getAccount() ? 'class="error"' : ''; ?>>                    
+                    <td><?php echo $this->escapeHtml($payment->description);?></td>
+                    <td>&pound;<?php echo $this->escapeHtml($payment->amount);?></td>
+                    <td><?php echo $this->escapeHtml($payment->created);?></td>
+                    <td><?php echo $payment->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
+                    <td>
+                        <?php                         
+                        echo $payment->frequency==0 
+                                ? 
+                                '<span class="badge badge-important">!</span>' : 
+                                '<span class="badge badge-success">Every '.($payment->frequency==1 ? 'week on day '.$this->escapeHtml($payment->day) : 'month on the '.$this->escapeHtml($payment->day).'th').'</span>'; 
+                        ?>
+                    </td> 
+                    <td><?php echo $this->escapeHtml($payment->getAccount()->name);?></td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a href="<?php echo $this->url('payments',array('action'=>'edit', 'id' => $payment->id));?>" class="btn"><i class="icon-pencil"></i></a>
+                            <a href="<?php echo $this->url('payments',array('action'=>'delete', 'id' => $payment->id));?>" class="btn"><i class="icon-trash"></i></a> 
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    
+</div>
