@@ -85,7 +85,7 @@ class Account
         return $this->name;
     }   
     
-    public function setCreated($created = null){
+    public function setCreated(\DateTime $created = null){
         
         if ($created==null){
             $created = new \DateTime("now");
@@ -150,8 +150,7 @@ class Account
         $this->toArray(); // makes sure we have all default values set
     }
     
-    
-    
+
     public function setInputFilter(InputFilterInterface $inputFilter = null)
     {
         

@@ -81,7 +81,7 @@ class Tag
         return $this->name;
     }   
     
-    public function setCreated($created = null){
+    public function setCreated(\DateTime $created = null){
         
         if ($created==null){
             $created = new \CreatedTime("now");

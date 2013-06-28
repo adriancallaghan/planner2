@@ -1,0 +1,85 @@
+
+
+<?php $this->headTitle($this->title); ?>
+
+
+<div class="row">
+           
+    <div class="span8 pull-left">
+        <h4><?php echo $this->escapeHtml($this->title); ?></h4>
+        <h5>
+            <span class="icon-list"></span> 
+            <?php 
+                echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' date' : $count.' date`s'; 
+            ?>            
+        </h5>
+    </div>
+    
+    
+    <div class="span4 pull-right">
+        <div class="pagination pagination-right">
+            <?php // add at the end of the file after the table
+            echo $this->paginationControl(
+                // the paginator admin
+                $this->paginator,
+                'sliding',
+                // the partial to use to render the control
+                array('partial/paginator.phtml', 'Date'),
+                // the route to link to when a user clicks a control link
+                array(
+                    'route' => 'dates'
+                )
+            );
+            ?>
+        </div>
+    </div>
+
+
+    <div class="content span12">
+
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                <th>Date</th>
+                <th>Created</th>
+                <th>Transactions</th>
+                <th><a href="<?php echo $this->url('dates', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
+            </tr>
+            <?php foreach ($this->paginator as $date) : ?>
+                <tr>
+                    <td><?php echo $this->escapeHtml($date->date);?></td> 
+                    <td><?php echo $this->escapeHtml($date->created);?></td> 
+                    <td>
+                        <?php
+                        if ($transactions = $date->getTransactions()) {
+                            foreach($transactions AS $transaction) : ?>
+                                <p>
+                                    <div class="btn-group pull-right">                                
+                                        <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn btn-mini">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                        <a href="<?php echo $this->url('transactions',array('action'=>'delete', 'id' => $transaction->id));?>" class="btn btn-mini">
+                                            <i class="icon-trash"></i>
+                                        </a>
+                                    </div>
+                                    &pound;<?php echo $transaction->amount; ?> <?php echo $transaction->description; ?>
+                                </p>
+                            <?php     
+                            endforeach;     
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->id));?>" class="btn"><i class="icon-add"></i></a>
+                            <a href="<?php echo $this->url('dates',array('action'=>'edit', 'id' => $date->id));?>" class="btn"><i class="icon-pencil"></i></a>
+                            <a href="<?php echo $this->url('dates',array('action'=>'delete', 'id' => $date->id));?>" class="btn"><i class="icon-trash"></i></a> 
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        
+    </div>
+    
+    
+</div>

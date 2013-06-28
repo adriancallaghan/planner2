@@ -3,6 +3,9 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilterInterface; 
 
 /**
  * A Date.
@@ -35,6 +38,11 @@ class Date
      */
     protected $date;
     
+    /**
+     * @ORM\Column(name="created", type="datetime")
+     */
+    protected $created;
+    
 
     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
@@ -57,7 +65,7 @@ class Date
         return $this->id;
     }
     
-    public function setDate($date = null){
+    public function setDate(\DateTime $date = null){
         
         if ($date==null){
             $date = new \DateTime("now");
@@ -73,8 +81,25 @@ class Date
         }
         return $this->date->format('Y-m-d H:i');
     }
-
-    public function setTransactions($transactions){
+    
+    public function setCreated(\DateTime $created = null){
+        
+        if ($created==null){
+            $created = new \DateTime("now");
+        }
+        $this->created = $created;
+        return $this;
+    }
+    
+    public function getCreated(){
+                
+        if (!isset($this->created)){
+            $this->setCreated();
+        }
+        return $this->created->format('Y-m-d H:i');
+    }
+    
+    public function setTransactions($transactions = array()){
         $this->transactions = $transactions;
         return $this;
     }
@@ -109,4 +134,58 @@ class Date
         $this->toArray(); // makes sure we have all default values set
     }
 
+    public function setInputFilter(InputFilterInterface $inputFilter = null)
+    {
+        
+        if ($inputFilter==null){
+            
+            $inputFilter = new InputFilter();
+
+            $factory = new InputFactory();
+
+            $inputFilter->add($factory->createInput(array(
+                'name'       => 'id',
+                'required'   => true,
+                'filters' => array(
+                    array('name'    => 'Int'),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'date',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 100,
+                        ),
+                    ),
+                ),
+            )));
+
+            
+        }
+        
+        $this->inputFilter = $inputFilter;
+        
+        return $this;
+    }
+
+    public function getInputFilter()
+    {
+        
+        if (!isset($this->inputFilter)) {
+            $this->setInputFilter();        
+        }
+        
+        return $this->inputFilter;
+    } 
+    
 }

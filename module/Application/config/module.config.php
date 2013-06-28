@@ -14,8 +14,11 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index'   => 'Application\Controller\IndexController',
+            'Application\Controller\Date' => 'Application\Controller\DateController',
+            'Application\Controller\Transaction' => 'Application\Controller\TransactionController',
             'Application\Controller\Payment' => 'Application\Controller\PaymentController',
             'Application\Controller\Account' => 'Application\Controller\AccountController',
+            'Application\Controller\Tag' => 'Application\Controller\TagController',
         ),
     ),
     'router' => array(
