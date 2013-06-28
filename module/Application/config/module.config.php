@@ -197,7 +197,7 @@ return array(
                     ),
                 )
             ), 
-            'tags' => array(
+            /*'tags' => array(
                 'label' => 'Tags',
                 'route' => 'tags',
                 'pages' => array(
@@ -217,7 +217,7 @@ return array(
                         'action' => 'delete',
                     ),
                 )
-            ),
+            ),*/
         ),
     ),
     

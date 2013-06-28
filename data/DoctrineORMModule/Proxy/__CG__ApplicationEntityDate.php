@@ -83,10 +83,10 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'inputFilter', 'id', 'date', 'activities');
+            return array('__isInitialized__', 'inputFilter', 'id', 'date', 'created', 'transactions');
         }
 
-        return array('__isInitialized__', 'inputFilter', 'id', 'date', 'activities');
+        return array('__isInitialized__', 'inputFilter', 'id', 'date', 'created', 'transactions');
     }
 
     /**
@@ -217,7 +217,7 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setDate($date = NULL)
+    public function setDate(\DateTime $date = NULL)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDate', array($date));
@@ -239,45 +239,68 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setActivities($activities)
+    public function setCreated(\DateTime $created = NULL)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setActivities', array($activities));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCreated', array($created));
 
-        return parent::setActivities($activities);
+        return parent::setCreated($created);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getActivities()
+    public function getCreated()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getActivities', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCreated', array());
 
-        return parent::getActivities();
+        return parent::getCreated();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeActivity(\Application\Entity\Activity $activity)
+    public function setTransactions($transactions = array (
+))
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeActivity', array($activity));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTransactions', array($transactions));
 
-        return parent::removeActivity($activity);
+        return parent::setTransactions($transactions);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addActivity(\Application\Entity\Activity $activity)
+    public function getTransactions()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addActivity', array($activity));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTransactions', array());
 
-        return parent::addActivity($activity);
+        return parent::getTransactions();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeTransaction(\Application\Entity\Transaction $transaction)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTransaction', array($transaction));
+
+        return parent::removeTransaction($transaction);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addTransaction(\Application\Entity\Transaction $transaction)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addTransaction', array($transaction));
+
+        return parent::addTransaction($transaction);
     }
 
     /**
@@ -289,6 +312,28 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'prePersist', array());
 
         return parent::prePersist();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setInputFilter(\Zend\InputFilter\InputFilterInterface $inputFilter = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setInputFilter', array($inputFilter));
+
+        return parent::setInputFilter($inputFilter);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInputFilter()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInputFilter', array());
+
+        return parent::getInputFilter();
     }
 
     /**

@@ -16,17 +16,20 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+
+        
+        
+        //var_dump($daterangeArray);
+        
+        $dates = new \Application\Models\Dates();
+        var_dump($dates->getMonth());
+        
         
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager'); // entity manager
         $dateOrm = $em->getRepository('Application\Entity\Date'); // orm for date        
-        $transactionOrm = $em->getRepository('Application\Entity\Transaction'); // orm for transaction
-        $paymentOrm = $em->getRepository('Application\Entity\Payment'); // orm for payment
-        $accountOrm = $em->getRepository('Application\Entity\Account'); // orm for account
-        
- 
+
         return new ViewModel(array(
             'dates' => $dateOrm->findAll(),
-            'accounts' => $accountOrm->findAll(),
             ));
     }
     

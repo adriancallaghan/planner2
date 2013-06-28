@@ -46,7 +46,7 @@ class PaymentController extends AbstractActionController
         
         return new ViewModel(array(
             'paginator' => $paginator,
-            'title'     => 'Payments',
+            'title'     => 'Available Payments',
             'flashMessages' => $this->flashMessenger()->getMessages(),
         ));
 
@@ -154,7 +154,7 @@ class PaymentController extends AbstractActionController
                 ->get('submit')->setAttribute('value', 'Edit');
 
         $form->get('account_id')
-                ->setValue((int) !isset($payment->account) ? null : $payment->account->id)
+                ->setValue($payment->account->id)
                 ->setAttributes(array('options'=>$accountTitles));
         
         // process a submission

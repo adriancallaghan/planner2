@@ -1,6 +1,6 @@
 <?php
 
-$title = 'Add Payment';
+$title = 'Add Tag';
 $this->headTitle($title);
 
 ?>
@@ -8,7 +8,7 @@ $this->headTitle($title);
 <?php
 
 $form = $this->form;
-$form->setAttribute('action', $this->url('payments', array('action' => 'add')));
+$form->setAttribute('action', $this->url('tags', array('action' => 'add','controller'=>'tag')));
 $form->prepare();
 
 echo $this->formTwb($form, \DluTwBootstrap\Form\FormUtil::FORM_TYPE_VERTICAL);

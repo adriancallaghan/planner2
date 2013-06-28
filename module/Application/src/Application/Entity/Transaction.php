@@ -192,7 +192,7 @@ class Transaction implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'message',
+                'name'     => 'date_id',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -211,7 +211,7 @@ class Transaction implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'author',
+                'name'     => 'payment_id',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -230,8 +230,8 @@ class Transaction implements InputFilterAwareInterface
             )));
             
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'email',
-                'required' => false,
+                'name'     => 'amount',
+                'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -247,6 +247,7 @@ class Transaction implements InputFilterAwareInterface
                     ),
                 ),
             )));
+           
         }
         
         $this->inputFilter = $inputFilter;

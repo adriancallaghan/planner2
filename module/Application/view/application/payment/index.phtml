@@ -47,6 +47,7 @@
                 <th>Active</th>
                 <th>Frequency</th>
                 <th>Account</th>
+                <!--th>Tags</th-->
                 <th><a href="<?php echo $this->url('payments', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
             </tr>
             <?php foreach ($this->paginator as $payment) : ?>
@@ -64,6 +65,32 @@
                         ?>
                     </td> 
                     <td><?php echo $this->escapeHtml($payment->getAccount()->name);?></td>
+                    <!--td>                        
+                        <?php
+                        if ($tags = $payment->getTags()) {
+                            foreach($tags AS $tag) : ?>
+                                <div class="btn-group pull-right">   
+                                    <a href="<?php echo $this->url('tags',array('action'=>'add', 'id' => $date->id));?>" class="btn btn-mini">
+                                        <i class="icon-plus"></i>
+                                    </a>
+                                    <a href="<?php echo $this->url('tags',array('action'=>'edit', 'id' => $tag->id));?>" class="btn btn-mini">
+                                        <i class="icon-pencil"></i>
+                                    </a>
+                                    <a href="<?php echo $this->url('tags',array('action'=>'delete', 'id' => $tag->id));?>" class="btn btn-mini">
+                                        <i class="icon-trash"></i>
+                                    </a>
+                                </div>                                
+                                <p>
+                                    &pound;<?php echo $tag->amount; ?> <?php echo $tag->payment->description; ?>&nbsp;
+                                    <?php if ($tag->comment!=='') : ?>
+                                        <small><i><?php echo $tag->comment; ?></i></small>
+                                    <?php endif; ?>
+                                </p>                         
+                            <?php     
+                            endforeach;     
+                        }
+                        ?>
+                    </td-->
                     <td>
                         <div class="btn-group pull-right">
                             <a href="<?php echo $this->url('payments',array('action'=>'edit', 'id' => $payment->id));?>" class="btn"><i class="icon-pencil"></i></a>

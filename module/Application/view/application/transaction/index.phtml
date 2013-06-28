@@ -1,0 +1,70 @@
+
+
+
+<?php $this->headTitle($this->title); ?>
+
+
+
+<div class="row">
+           
+    <div class="span8 pull-left">
+        <h4><?php echo $this->escapeHtml($this->title); ?></h4>
+        <h5>
+            <span class="icon-list"></span> 
+            <?php 
+                echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' transaction' : $count.' transactions'; 
+            ?>            
+        </h5>
+    </div>
+
+
+    <div class="span4 pull-right">
+        <div class="pagination pagination-right">
+            <?php // add at the end of the file after the table
+            echo $this->paginationControl(
+                // the paginator admin
+                $this->paginator,
+                'sliding',
+                // the partial to use to render the control
+                array('partial/paginator.phtml', 'Payment'),
+                // the route to link to when a user clicks a control link
+                array(
+                    'route' => 'transactions'
+                )
+            );
+            ?>
+        </div>
+    </div>
+
+
+    <div class="content span12">
+
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Comment</th>
+                <th>Active</th>
+                <th>Created</th>
+                <th><a href="<?php echo $this->url('transactions', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
+            </tr>
+            <?php foreach ($this->paginator as $transaction) : ?>
+                <tr <?php echo !$transaction->getPayment() ? 'class="error"' : ''; ?>>                    
+                    <td>&pound;<?php echo $this->escapeHtml($transaction->amount);?></td>
+                    <td><?php echo $this->escapeHtml($transaction->getPayment()->description);?></td>
+                    <td><?php echo $this->escapeHtml($transaction->comment);?></td>
+                    <td><?php echo $transaction->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
+                    <td><?php echo $this->escapeHtml($transaction->created);?></td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn"><i class="icon-pencil"></i></a>
+                            <a href="<?php echo $this->url('transactions',array('action'=>'delete', 'id' => $transaction->id));?>" class="btn"><i class="icon-trash"></i></a> 
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    
+</div>

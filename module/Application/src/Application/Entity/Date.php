@@ -170,7 +170,6 @@ class Date
                 ),
             )));
 
-            
         }
         
         $this->inputFilter = $inputFilter;

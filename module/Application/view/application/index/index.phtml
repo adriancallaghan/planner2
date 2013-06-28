@@ -1,7 +1,7 @@
 
 
 
-<h3>Dates</h3>
+<h3>Overview</h3>
 <p>Dates have Transactions, that relate to payments, that have accounts and Tags</p>
 <table class="table table-bordered">
     <?php foreach($this->dates AS $date): ?>
@@ -33,40 +33,5 @@
             </td>
         </tr>
 
-    <?php endforeach; ?>
-</table>
-
-
-
-<h3>Accounts</h3>
-<table class="table table-bordered table-condensed table-hover table-striped">                    
-    <?php foreach($this->accounts AS $account): ?>
-        <tr>
-            <td><?php echo $account->name; ?></td>
-            <td><?php echo $account->created; ?></td>
-            <td><?php echo $account->active; ?></td>
-            <td>
-                <table class="table table-bordered table-condensed table-hover table-striped">                    
-                    <tr>
-                        <th>Transaction ID</th>
-                        <th>Activity ID</th>
-                        <th>Amount</th>
-                        <th>Description</th>
-                        <th>Comment</th>
-                        <th>Account</th>
-                    </tr>
-                    <?php /*foreach($account->transactions AS $transaction) : ?>                  
-                        <tr>
-                            <td><?php //echo $transaction->id; ?></td>
-                            <td><?php //echo $transaction->activity->id; ?></td>
-                            <td>&pound;<?php //echo $transaction->activity->amount; ?></td>
-                            <td><?php //echo $transaction->description; ?></td>
-                            <td><?php //echo $transaction->activity->comment; ?></td>
-                            <td><?php //echo $transaction->account->name; ?></td>
-                        </tr>
-                    <?php endforeach; */?>
-                </table>
-            </td>
-        </tr>
     <?php endforeach; ?>
 </table>

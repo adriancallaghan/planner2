@@ -1,5 +1,5 @@
 <?php
-$title = 'Delete payment';
+$title = 'Delete tag';
 $this->headTitle($title);
 ?>
 
@@ -9,18 +9,17 @@ $this->headTitle($title);
         <h4><?php echo $this->escapeHtml($title); ?></h4>
         <h5>
             Are you sure that you want to delete
-            '<?php echo $this->escapeHtml($payment->description); ?>' of 
-            &pound;<?php echo $this->escapeHtml($payment->amount); ?>?
+            '<?php echo $this->escapeHtml($tag->name); ?>'?
         </h5>
 
         <?php
-        $url = $this->url('payments', array(
+        $url = $this->url('tags', array(
             'action' => 'delete',
             'id'     => $this->id,
         ));
         ?>
         <form action="<?php echo $url; ?>" method="post">
-            <input type="hidden" name="id" value="<?php echo (int) $payment->id; ?>" />
+            <input type="hidden" name="id" value="<?php echo (int) $tag->id; ?>" />
             <input type="submit" name="del" value="Yes" class="btn btn-large btn-success" />
             <input type="submit" name="del" value="No" class="btn btn-large btn-danger" />
         </form>

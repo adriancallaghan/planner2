@@ -10,7 +10,7 @@
         <h5>
             <span class="icon-list"></span> 
             <?php 
-                echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' account' : $count.' account`s'; 
+                echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' tag' : $count.' tag`s'; 
             ?>            
         </h5>
     </div>
@@ -24,10 +24,10 @@
                 $this->paginator,
                 'sliding',
                 // the partial to use to render the control
-                array('partial/paginator.phtml', 'Account'),
+                array('partial/paginator.phtml', 'Tag'),
                 // the route to link to when a user clicks a control link
                 array(
-                    'route' => 'accounts'
+                    'route' => 'tags'
                 )
             );
             ?>
@@ -43,23 +43,24 @@
                 <th>Status</th>
                 <th>Created</th>
                 <th>Payments</th>
-                <th><a href="<?php echo $this->url('accounts', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
+                <th><a href="<?php echo $this->url('tags', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
             </tr>
-            <?php foreach ($this->paginator as $account) : ?>
+            <?php foreach ($this->paginator as $tag) : ?>
                 <tr>
-                    <td><?php echo $this->escapeHtml($account->name);?></td>
-                    <td><?php echo $account->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
-                    <td><?php echo $this->escapeHtml($account->created);?></td>
+                    <td><?php echo $this->escapeHtml($tag->name);?></td>
+                    <td><?php echo $tag->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
+                    <td><?php echo $this->escapeHtml($tag->created);?></td>
                     <td>
                         <?php
-                        if ($payments = $account->getPayments()) {
+                        /*
+                        if ($payments = $tag->getPayments()) {
                             foreach($payments AS $payment) : ?>
                                 <p>
-                                    <div class="btn-group pull-right">   
-                                        
-                                        <a href="<?php echo $this->url('payments',array('action'=>'add', 'id' => $account->id));?>" class="btn btn-mini">
+                                    <div class="btn-group pull-right"> 
+                                             
+                                        <a href="<?php echo $this->url('payments',array('action'=>'add', 'id' => $tag->id));?>" class="btn btn-mini">
                                             <i class="icon-plus"></i>
-                                        </a>                                        
+                                        </a>           
                                         <a href="<?php echo $this->url('payments',array('action'=>'edit', 'id' => $payment->id));?>" class="btn btn-mini">
                                             <i class="icon-pencil"></i>
                                         </a>
@@ -71,13 +72,13 @@
                                 </p>
                             <?php     
                             endforeach;     
-                        }
+                        }*/
                         ?>
                     </td>
                     <td>
                         <div class="btn-group pull-right">                            
-                            <a href="<?php echo $this->url('accounts',array('action'=>'edit', 'id' => $account->id));?>" class="btn"><i class="icon-pencil"></i></a>
-                            <a href="<?php echo $this->url('accounts',array('action'=>'delete', 'id' => $account->id));?>" class="btn"><i class="icon-trash"></i></a> 
+                            <a href="<?php echo $this->url('tags',array('action'=>'edit', 'id' => $tag->id));?>" class="btn"><i class="icon-pencil"></i></a>
+                            <a href="<?php echo $this->url('tags',array('action'=>'delete', 'id' => $tag->id));?>" class="btn"><i class="icon-trash"></i></a> 
                         </div>
                     </td>
                 </tr>
