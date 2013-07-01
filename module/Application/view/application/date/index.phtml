@@ -46,8 +46,8 @@
             </tr>
             <?php foreach ($this->paginator as $date) : ?>
                 <tr>
-                    <td><?php echo $this->escapeHtml($date->date);?></td> 
-                    <td><?php echo $this->escapeHtml($date->created);?></td> 
+                    <td><?php echo $this->escapeHtml($date->date->format('Y-m-d'));?></td> 
+                    <td><?php echo $this->escapeHtml($date->created->format('Y-m-d'));?></td> 
                     <td>                        
                         <?php
                         if ($transactions = $date->getTransactions()) {

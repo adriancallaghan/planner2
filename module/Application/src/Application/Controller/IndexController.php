@@ -17,19 +17,30 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
 
+        // Requested Date
+        $dateTime = new \DateTime($this->params()->fromRoute('datestamp','now'));
         
+        // Months surrounding requested Date
+        $months = new \DatePeriod(new \DateTime("{$dateTime->format('Y M D')} -1 months"),  new \DateInterval('P1M'), new \DateTime("{$dateTime->format('Y M D')} +2 months"));
         
-        //var_dump($daterangeArray);
-        
-        $dates = new \Application\Models\Dates();
-        var_dump($dates->getMonth());
-        
-        
-        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager'); // entity manager
-        $dateOrm = $em->getRepository('Application\Entity\Date'); // orm for date        
+        // Statement
+        $statement = $this->getServiceLocator()->get('Application\Models\Statement');
 
+        // change period
+        $statement->setPeriod(
+            new \DatePeriod(
+                new \DateTime("{$dateTime->format('Y M D')} last Friday of last month"),
+                new \DateInterval('P1D'),
+                new \DateTime("{$dateTime->format('Y M D')} last Friday of this month")
+            )
+        );
+
+        // to view
         return new ViewModel(array(
-            'dates' => $dateOrm->findAll(),
+            'dates'     => $statement,
+            'title'     => $dateTime->format('D jS M Y'),
+            'today'     => $dateTime,
+            'months'    => $months
             ));
     }
     

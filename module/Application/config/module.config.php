@@ -23,16 +23,22 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            
             'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'segment',
                 'options' => array(
-                    'route'    => '/',
+                    'route'    => '/[:datestamp]',
+                    'constraints' => array(
+                        'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}',
+                    ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Index',
                         'action'     => 'index',
                     ),
                 ),
-            ), 
+            ),
+            
+                        
             'dates' => array(
                 'type'    => 'segment',
                 'options' => array(
@@ -113,6 +119,7 @@ return array(
                 'label' => 'Home',
                 'route' => 'home',                
             ),
+            /*
             'dates' => array(
                 'label' => 'Dates',
                 'route' => 'dates',
@@ -154,7 +161,7 @@ return array(
                         'action' => 'delete',
                     ),
                 )
-            ), 
+            ), */
             'payments' => array(
                 'label' => 'Payments',
                 'route' => 'payments',
@@ -226,7 +233,13 @@ return array(
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
             'Zend\Authentication\AuthenticationService' => function($serviceManager) {
                 return $serviceManager->get('doctrine.authenticationservice.orm_default');
-            }
+            }, 
+            'Application\Models\Statement' => function($sm) {
+                $statement = new \Application\Models\Statement();
+                return $statement;
+            }        
+                    
+                    
         ),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
@@ -235,6 +248,9 @@ return array(
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),
+        /*'invokables' => array(
+            'Application\Models\Statement' => 'Application\Models\Statement',
+        ),    */            
     ),
     'translator' => array(
         'locale' => 'en_US',

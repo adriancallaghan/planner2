@@ -49,7 +49,7 @@
                 <tr>
                     <td><?php echo $this->escapeHtml($account->name);?></td>
                     <td><?php echo $account->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
-                    <td><?php echo $this->escapeHtml($account->created);?></td>
+                    <td><?php echo $this->escapeHtml($account->created->format('Y-m-d'));?></td>
                     <td>
                         <?php
                         if ($payments = $account->getPayments()) {

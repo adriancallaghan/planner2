@@ -55,7 +55,7 @@
                     <td><?php echo $this->escapeHtml($transaction->getPayment()->description);?></td>
                     <td><?php echo $this->escapeHtml($transaction->comment);?></td>
                     <td><?php echo $transaction->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
-                    <td><?php echo $this->escapeHtml($transaction->created);?></td>
+                    <td><?php echo $this->escapeHtml($transaction->created->format('Y-m-d'));?></td>
                     <td>
                         <div class="btn-group pull-right">
                             <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn"><i class="icon-pencil"></i></a>

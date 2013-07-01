@@ -63,7 +63,7 @@ class TransactionController extends AbstractActionController
         
         $dateTitles = array();
         foreach ($dateDao->findAll() AS $v){
-            $dateTitles[$v->id] = "{$v->date}";
+            $dateTitles[$v->id] = "{$v->date->format('Y-m-d')}";
         }        
                 
         $paymentTitles = array();
@@ -148,7 +148,7 @@ class TransactionController extends AbstractActionController
         
         $dateTitles = array();
         foreach ($dateDao->findAll() AS $v){
-            $dateTitles[$v->id] = "{$v->date}";
+            $dateTitles[$v->id] = "{$v->date->format('Y-m-d')}";
         }        
                 
         $paymentTitles = array();

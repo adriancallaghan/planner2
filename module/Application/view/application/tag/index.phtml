@@ -49,7 +49,7 @@
                 <tr>
                     <td><?php echo $this->escapeHtml($tag->name);?></td>
                     <td><?php echo $tag->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
-                    <td><?php echo $this->escapeHtml($tag->created);?></td>
+                    <td><?php echo $this->escapeHtml($tag->created->format('Y-m-d'));?></td>
                     <td>
                         <?php
                         /*

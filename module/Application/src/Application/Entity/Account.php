@@ -99,7 +99,8 @@ class Account
         if (!isset($this->created)){
             $this->setCreated();
         }
-        return $this->created->format('Y-m-d H:i');
+        //return $this->created->format('Y-m-d H:i');
+        return $this->created;
     }
 
     public function setActive($active = true){

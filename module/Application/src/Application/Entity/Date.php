@@ -79,7 +79,8 @@ class Date
         if (!isset($this->date)){
             $this->setDate();
         }
-        return $this->date->format('Y-m-d H:i');
+        return $this->date;
+        //return $this->date->format('Y-m-d H:i');
     }
     
     public function setCreated(\DateTime $created = null){
@@ -96,7 +97,8 @@ class Date
         if (!isset($this->created)){
             $this->setCreated();
         }
-        return $this->created->format('Y-m-d H:i');
+        return $this->created;
+        //return $this->created->format('Y-m-d H:i');
     }
     
     public function setTransactions($transactions = array()){
