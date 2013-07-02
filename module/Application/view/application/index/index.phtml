@@ -1,18 +1,19 @@
 
 
-<?php $this->headTitle($this->title); ?>
+<?php $this->headTitle($this->statement->getStatementTitle()); ?>
 
 
 <div class="row">
            
     <div class="span4 pull-left">
-        <h4><?php echo $this->escapeHtml($this->title); ?></h4>
+        <h4><?php echo $this->statement->getStatementTitle(); ?></h4>
         <h5>
             <span class="icon-list"></span> 
             <?php 
                 //echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' date' : $count.' date`s'; 
-                echo (1==($count = $this->dates->count())) ? $count.' Day' : $count.' Day`s'; 
-            ?>             
+                echo (1==($count = $this->statement->count())) ? $count.' Day' : $count.' Day`s'; 
+            ?>    
+            &pound;<?php echo number_format($this->statement->getBalance($this->statement->getEnd()->date),2); ?>
         </h5>
     </div>
     
@@ -42,16 +43,21 @@
         <table class="table table-striped table-hover table-bordered">
             <tr>
                 <th>Date</th>
+                <th>Balance</th>
                 <th>Transactions</th>
                 <!--th><a href="<?php echo $this->url('dates', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th-->
             </tr>
-            <?php foreach ($this->dates as $date) : ?>
+            <?php foreach ($this->statement as $date) : ?>
                 <tr>
                     <td>
                         <?php //echo $this->escapeHtml($date->date); ?>                        
                         <?php echo $this->escapeHtml($date->date->format('D jS \of M')); ?>
                     </td> 
-                    <td>      
+                    <td>
+                        &pound;<?php echo $this->escapeHtml(number_format($this->statement->getBalance($date->date),2)); ?>                        
+                    </td>
+                    <td>     
+                        Total: &pound;<?php echo $this->escapeHtml(number_format($date->transactionTotal,2)); ?>
                         <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->id));?>" class="btn btn-mini pull-right">
                             <i class="icon-plus"></i>
                         </a>
@@ -69,7 +75,7 @@
                                     </a-->
                                 </div>                                
                                 <p>
-                                    &pound;<?php echo $transaction->amount; ?> <?php echo $transaction->payment->description; ?> - <?php echo $transaction->payment->account->name; ?>&nbsp;
+                                    &pound;<?php echo number_format($transaction->amount,2); ?> <?php echo $transaction->payment->description; ?> - <?php echo $transaction->payment->account->name; ?>&nbsp;
                                     <?php if ($transaction->comment!=='') : ?>
                                         <small><i><?php echo $transaction->comment; ?></i></small>
                                     <?php endif; ?>

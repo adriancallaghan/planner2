@@ -26,7 +26,11 @@ class IndexController extends AbstractActionController
         // Statement
         $statement = $this->getServiceLocator()->get('Application\Models\Statement');
 
-        // change period
+        /* change period
+         * 
+         * Should be one month of transactions from last Friday of last month, to last Thursday of this month, payday to payday
+         * This is loosely coupled
+         */
         $statement->setPeriod(
             new \DatePeriod(
                 new \DateTime("{$dateTime->format('Y M D')} last Friday of last month"),
@@ -34,13 +38,13 @@ class IndexController extends AbstractActionController
                 new \DateTime("{$dateTime->format('Y M D')} last Friday of this month")
             )
         );
-
+            
+                                
         // to view
         return new ViewModel(array(
-            'dates'     => $statement,
-            'title'     => $dateTime->format('D jS M Y'),
-            'today'     => $dateTime,
-            'months'    => $months
+            'statement'     => $statement,
+            'today'         => $dateTime,
+            'months'        => $months
             ));
     }
     

@@ -3,6 +3,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilterInterface; 
@@ -38,17 +39,24 @@ class Date
      */
     protected $date;
     
-    /**
-     * @ORM\Column(name="created", type="datetime")
-     */
-    protected $created;
     
-
     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
      * @ORM\OneToMany(targetEntity="Transaction", mappedBy="date", cascade={"persist", "remove"}) 
      */  
     protected $transactions;
+    
+    /**
+     * @ORM\Column(name="transactionTotal", type="float")
+     */
+    protected $transactionTotal;
+    
+    
+    /**
+     * @ORM\Column(name="created", type="datetime")
+     */
+    protected $created;
+    
 
 
     
@@ -83,6 +91,19 @@ class Date
         //return $this->date->format('Y-m-d H:i');
     }
     
+    public function setTransactionTotal($transactionTotal = 0){
+        $this->transactionTotal = (float) $transactionTotal;
+        return $this;
+    }
+    
+    public function getTransactionTotal(){
+        
+        if (!isset($this->transactionTotal)){
+            $this->setTransactionTotal();
+        }
+        return $this->transactionTotal;
+    }
+    
     public function setCreated(\DateTime $created = null){
         
         if ($created==null){
@@ -102,7 +123,11 @@ class Date
     }
     
     public function setTransactions($transactions = array()){
+
+        $transactions = is_array($transactions) ? new Collections\ArrayCollection($transactions) : $transactions;
         $this->transactions = $transactions;
+        $this->updateBalance();
+        
         return $this;
     }
     
@@ -136,6 +161,15 @@ class Date
         $this->toArray(); // makes sure we have all default values set
     }
 
+    /** @ORM\PostLoad */
+    public function updateBalance()
+    {
+        $total = array_sum($this->getTransactions()->map(function($v){ 
+            return $v->active ? $v->amount : 0;
+            })->getValues());
+        $this->setTransactionTotal($total);
+    }
+    
     public function setInputFilter(InputFilterInterface $inputFilter = null)
     {
         

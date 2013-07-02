@@ -9,87 +9,103 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
 {
 
     use \Application\Traits\Iterable;
-    
-        
-    protected $serviceLocator;
-    // protected $_cache;
 
-    public function __construct(\DatePeriod $datePeriod = null, $reverse = false) {
+    protected $_serviceLocator;
+    protected $_datePeriod;
+    protected $_reversed;
+    protected $_statementTitle;
         
-        if ($datePeriod==null){
-            $start = new \DateTime("last Friday of last month");
-            $end = new \DateTime("last Friday of this month");
-            $datePeriod = new \DatePeriod($start, new \DateInterval('P1D') ,$end);
-        }
         
-        return $this->setPeriod($datePeriod, $reverse);
+    public function getServiceLocator() {
+        return $this->_serviceLocator;
     }
-        
-    public function setPeriod(\DatePeriod $datePeriod, $reverse = false) {
-        
-        $datePeriod = iterator_to_array($datePeriod);
+    
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
+        $this->_serviceLocator = $serviceLocator;
+    }
 
-        if ($reverse){
+    public function getPeriod(){        
+        if (!isset($this->_datePeriod)){
+            $this->setPeriod(new \DatePeriod());
+        }
+        return $this->_datePeriod;
+    }
+    
+    public function setPeriod(\DatePeriod $datePeriod, $reversed = false) {
+        /*
+         * Main query method for object
+         */
+        $this->_datePeriod = $datePeriod;
+        $this->_reversed = $reversed;
+
+        $datePeriod = iterator_to_array($this->_datePeriod);
+
+        if ($this->_reversed){
             $datePeriod = array_reverse($datePeriod);
         }
+
+        $dates = array();
+
+        // must be fetched first, (generated) for the balance method to be accurate
+        foreach($datePeriod AS $dateTime){            
+            $dates[] = $this->fetchDate($dateTime);
+        }
         
-        $this->setData($datePeriod);
+        $this->setData($dates);
         
         return $this;
     }
     
-    
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    public function getServiceLocator() {
-        return $this->serviceLocator;
-    }
-    
-    /*    
-    public function getCache(){}    
-    public function setCache(){}    
-    public function clearCache(){}
-    public function purgeCache(){}
-    */
-
-    
-    /*
-     * Override iterable current method
-     */
-    public function current(){
+    public function getBalance(\DateTime $dateTime){
+        /*
+         * returns balance on any given day
+         */
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');  
         
-        // override iterable, to build an object and return it
-        if ($this->valid()){            
-            $data = $this->getData();
-            $date = $data[$this->_position];
-            return $this->getDate($date);          
+        $dql = "SELECT SUM(e.transactionTotal) AS balance FROM Application\Entity\Date e " ."WHERE e.date < ?1";
+        $balance = $em->createQuery($dql)
+                      ->setParameter(1, $dateTime)
+                      ->getSingleScalarResult();
+        
+        return (float) $balance;
+        
+    }
+
+    public function getStatementTitle(){        
+        if (!isset($this->_statementTitle)){
+            $this->setStatementTitle();
         }
+        return (string) $this->_statementTitle;
     }
-
-    /*
-     * toArray
-     */
-    public function toArray(){
-         
-        /*$articleIds = $this->getData();
-        $return = null;
+    
+    public function setStatementTitle($title = null){
         
-        if (count($articleIds)>0){
-                        
-            foreach($articleIds AS $articleId){
-                $return[] = $this->getArticle($articleId)->toArray();
+        if ($title==null){
+ 
+            $datePeriod = iterator_to_array($this->getPeriod());
+
+            if ($this->_reversed){
+                $datePeriod = array_reverse($datePeriod);
             }
+
+            $from = reset($datePeriod);
+            $to = end($datePeriod);
+            $endBalance = number_format($this->getBalance($to),2);
+            $days = count($datePeriod);
+            $s = $days==1 ? '': '`s';
+
+            // _statementTitle
+            //$title = "{$from->format('D jS M')} to {$to->format('D jS M')} &pound;$endBalance ($days day$s)";
+            $title = "{$from->format('D jS M')} to {$to->format('D jS M')}";
             
         }
         
-        return $return;*/
+        $this->_statementTitle = $title;
+        
+        return $this;
     }
-    
-    
-    // accessible 
-    public function getDate(\DateTime $dateTime){
+
+    public function fetchDate(\DateTime $dateTime){
         
         
         /*
@@ -101,6 +117,7 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
 
         
         /* fetch date - if not exists create a new date entry */
+    
         if (!$date = $em->getRepository('Application\Entity\Date')->findOneBy(array('date'=>$dateTime))){
             
             
@@ -174,8 +191,7 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
 
                 }
             }
-
-
+            
             $em->flush(); // save   
             
         }
@@ -187,8 +203,6 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
         return $date;
 
     }
-    
 
- 
 }
 

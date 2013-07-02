@@ -54,12 +54,12 @@
             <?php foreach ($this->paginator as $payment) : ?>
                 <tr <?php echo !$payment->getAccount() ? 'class="error"' : ''; ?>>                    
                     <td><?php echo $this->escapeHtml($payment->description);?></td>
-                    <td>&pound;<?php echo $this->escapeHtml($payment->amount);?></td>
+                    <td>&pound;<?php echo $this->escapeHtml(number_format($payment->amount,2));?></td>
                     <td>&pound;
                         <?php                            
-                        echo array_sum($payment->transactions->map(function($v){ 
-                            return $v->amount;
-                        })->getValues());
+                        echo number_format(array_sum($payment->transactions->map(function($v){ 
+                            return $v->active ? $v->amount : 0;
+                        })->getValues()),2);
                         
                         /*
                          * FULL DETAILS
@@ -96,7 +96,7 @@
                                     </a>
                                 </div>                                
                                 <p>
-                                    &pound;<?php echo $tag->amount; ?> <?php echo $tag->payment->description; ?>&nbsp;
+                                    &pound;<?php echo number_format($tag->amount,2); ?> <?php echo $tag->payment->description; ?>&nbsp;
                                     <?php if ($tag->comment!=='') : ?>
                                         <small><i><?php echo $tag->comment; ?></i></small>
                                     <?php endif; ?>

@@ -83,10 +83,10 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'inputFilter', 'id', 'date', 'created', 'transactions');
+            return array('__isInitialized__', 'inputFilter', 'id', 'date', 'transactions', 'transactionTotal', 'created');
         }
 
-        return array('__isInitialized__', 'inputFilter', 'id', 'date', 'created', 'transactions');
+        return array('__isInitialized__', 'inputFilter', 'id', 'date', 'transactions', 'transactionTotal', 'created');
     }
 
     /**
@@ -239,6 +239,28 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function setTransactionTotal($transactionTotal = 0)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTransactionTotal', array($transactionTotal));
+
+        return parent::setTransactionTotal($transactionTotal);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTransactionTotal()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTransactionTotal', array());
+
+        return parent::getTransactionTotal();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setCreated(\DateTime $created = NULL)
     {
 
@@ -312,6 +334,17 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'prePersist', array());
 
         return parent::prePersist();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateBalance()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateBalance', array());
+
+        return parent::updateBalance();
     }
 
     /**
