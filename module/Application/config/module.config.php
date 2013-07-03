@@ -140,7 +140,7 @@ return array(
                         'action' => 'delete',
                     ),
                 )
-            ), 
+            ), */
             'transactions' => array(
                 'label' => 'Transactions',
                 'route' => 'transactions',
@@ -161,7 +161,7 @@ return array(
                         'action' => 'delete',
                     ),
                 )
-            ), */
+            ), 
             'payments' => array(
                 'label' => 'Payments',
                 'route' => 'payments',

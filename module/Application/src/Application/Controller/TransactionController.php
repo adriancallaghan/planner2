@@ -63,7 +63,7 @@ class TransactionController extends AbstractActionController
         
         $dateTitles = array();
         foreach ($dateDao->findAll() AS $v){
-            $dateTitles[$v->id] = "{$v->date->format('Y-m-d')}";
+            $dateTitles[$v->getId()] = "{$v->getDate()->format('Y-m-d')}";
         }        
                 
         $paymentTitles = array();
@@ -105,9 +105,9 @@ class TransactionController extends AbstractActionController
                 
             } else {    
                 
-                $em->persist($payment); // set data                
+                //$em->persist($payment); // set data                
                 $em->persist($date); // set data
-                $em->persist($transaction); // set data
+                //$em->persist($transaction); // set data
                 
                 $payment->addTransaction($transaction);
                 $date->addTransaction($transaction);
@@ -118,7 +118,8 @@ class TransactionController extends AbstractActionController
             }
 
             // Redirect to list of transactions
-            return $this->redirect()->toRoute('transactions');
+            //return $this->redirect()->toRoute('transactions');
+            return $this->redirect()->toRoute('home');
         }
         
         
@@ -148,7 +149,7 @@ class TransactionController extends AbstractActionController
         
         $dateTitles = array();
         foreach ($dateDao->findAll() AS $v){
-            $dateTitles[$v->id] = "{$v->date->format('Y-m-d')}";
+            $dateTitles[$v->getId()] = "{$v->getDate()->format('Y-m-d')}";
         }        
                 
         $paymentTitles = array();
@@ -168,7 +169,7 @@ class TransactionController extends AbstractActionController
                 ->setAttributes(array('options'=>$paymentTitles));
                 
         $form->get('date_id')
-                ->setValue($transaction->date->id)
+                ->setValue($transaction->date->getId())
                 ->setAttributes(array('options'=>$dateTitles));
         
         
@@ -187,6 +188,7 @@ class TransactionController extends AbstractActionController
                 $dateId = (int) $form->get('date_id')->getValue();
                 $date = $dateDao->find($dateId);  
 
+                
                 $transaction->setOptions($form->getData()); // set the data     
 
 
@@ -200,19 +202,20 @@ class TransactionController extends AbstractActionController
 
                 } else {    
 
-                    $em->persist($payment); // set data                
+                    //$em->persist($payment); // set data                
                     $em->persist($date); // set data
-                    $em->persist($transaction); // set data
+                    //$em->persist($transaction); // set data
 
-                    $payment->addTransaction($transaction);
+                    $payment->addTransaction($transaction);                    
                     $date->addTransaction($transaction);
-
+                    
                     $em->flush(); // save            
                     $this->flashMessenger()->addMessage(array('alert-success'=>'Transaction Updated!'));
 
                 }
                 
-                return $this->redirect()->toRoute('transactions');
+                //return $this->redirect()->toRoute('transactions');
+                return $this->redirect()->toRoute('home');
 
 
             } else {
@@ -249,7 +252,8 @@ class TransactionController extends AbstractActionController
             $this->flashMessenger()->addMessage(array('alert-info'=>'Deleted'));
 
             // Redirect to list of payments
-            return $this->redirect()->toRoute('transactions');
+            //return $this->redirect()->toRoute('transactions');
+            return $this->redirect()->toRoute('home');
         }
 
         return array(

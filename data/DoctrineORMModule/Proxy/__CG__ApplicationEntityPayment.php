@@ -261,51 +261,6 @@ class Payment extends \Application\Entity\Payment implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setTags($tags = array (
-))
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTags', array($tags));
-
-        return parent::setTags($tags);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTags()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTags', array());
-
-        return parent::getTags();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeTag(\Application\Entity\Tag $tag)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTag', array($tag));
-
-        return parent::removeTag($tag);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addTag(\Application\Entity\Tag $tag)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addTag', array($tag));
-
-        return parent::addTag($tag);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setTransactions($transactions = array (
 ))
     {

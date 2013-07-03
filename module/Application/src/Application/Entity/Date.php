@@ -21,7 +21,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Date 
 {
     
-    use \Application\Traits\ReadOnly;
+    //use \Application\Traits\ReadOnly;
     
     
     protected $inputFilter;
@@ -35,7 +35,7 @@ class Date
 
     
     /**
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
     protected $date;
     
@@ -46,8 +46,9 @@ class Date
      */  
     protected $transactions;
     
+
     /**
-     * @ORM\Column(name="transactionTotal", type="float")
+     * @ORM\Column(type="decimal", scale=2)
      */
     protected $transactionTotal;
     
@@ -58,97 +59,77 @@ class Date
     protected $created;
     
 
+    public function __construct() {
 
-    
-    public function setId($id = 0){
-        $this->id = (int)$id;
-        return $this;
+        $this->date = new \DateTime();
+        $this->transactionTotal = 0;
+        $this->transactions = new Collections\ArrayCollection(); // no setter for this
     }
     
-    public function getId(){
-        
-        if (!isset($this->id)){
-            $this->setId();
-        }
+    
+    public function getId(){        
         return $this->id;
     }
-    
-    public function setDate(\DateTime $date = null){
-        
-        if ($date==null){
-            $date = new \DateTime("now");
-        }
-        $this->date = $date;
+
+    public function setDate(\DateTime $dateTime){
+        $this->date = $dateTime;
         return $this;
     }
     
-    public function getDate(){
-                
-        if (!isset($this->date)){
-            $this->setDate();
-        }
+    public function getDate(){                
         return $this->date;
-        //return $this->date->format('Y-m-d H:i');
-    }
-    
-    public function setTransactionTotal($transactionTotal = 0){
-        $this->transactionTotal = (float) $transactionTotal;
-        return $this;
     }
     
     public function getTransactionTotal(){
-        
-        if (!isset($this->transactionTotal)){
-            $this->setTransactionTotal();
-        }
         return $this->transactionTotal;
     }
     
-    public function setCreated(\DateTime $created = null){
-        
-        if ($created==null){
-            $created = new \DateTime("now");
-        }
-        $this->created = $created;
-        return $this;
-    }
-    
-    public function getCreated(){
-                
-        if (!isset($this->created)){
-            $this->setCreated();
-        }
-        return $this->created;
-        //return $this->created->format('Y-m-d H:i');
-    }
-    
-    public function setTransactions($transactions = array()){
+    public function setTransactionTotal()
+    {
+        $this->transactionTotal = array_sum($this->getTransactions()->map(function($v){ 
+            return $v->active ? $v->amount : 0;
+            })->getValues());
 
-        $transactions = is_array($transactions) ? new Collections\ArrayCollection($transactions) : $transactions;
-        $this->transactions = $transactions;
-        $this->updateBalance();
-        
-        return $this;
+        return;
     }
+    
+    public function getCreated(){                
+        return $this->created;
+    }  
     
     public function getTransactions(){
-        
-        if (!isset($this->transactions)){            
-            $this->setTransactions();
-        }
         return $this->transactions;
     }
      
     public function removeTransaction(Transaction $transaction) {
-        
-        throw new \Exception('Not implemented'); // deleted by the entity manager
+
+        $this->transactions->removeElement($transaction);
+        $this->setTransactionTotal();
+        return $this;
     }
  
     public function addTransaction(Transaction $transaction) {
-        $transaction->setDate($this);
-        $transactions = $this->getTransactions();        
-        $transactions[] = $transaction;
-        $this->setTransactions($transactions);
+
+        // check if this has a date, and if the date is the same, 
+        // if not it has been moved call remove transaction on the old date
+        // this is imperative, to maintain the "totalTransaction" amount intergity, which is then managed by the em
+        if (!is_null($transaction->date) && $transaction->date!==$this){
+            $transaction->date->removeTransaction($transaction);
+        }
+        
+        $transaction->setDate($this); 
+        
+        // stop duplication
+        if ($this->getTransactions()->contains($transaction)){            
+            $this->removeTransaction($transaction);
+        } 
+        
+        // now add
+        $this->getTransactions()->add($transaction);
+        
+        // update the transaction total
+        $this->setTransactionTotal();
+        
         return $this;
     }
     
@@ -158,16 +139,7 @@ class Date
     */
     public function prePersist()
     {
-        $this->toArray(); // makes sure we have all default values set
-    }
-
-    /** @ORM\PostLoad */
-    public function updateBalance()
-    {
-        $total = array_sum($this->getTransactions()->map(function($v){ 
-            return $v->active ? $v->amount : 0;
-            })->getValues());
-        $this->setTransactionTotal($total);
+        $this->created = new \DateTime("now");
     }
     
     public function setInputFilter(InputFilterInterface $inputFilter = null)

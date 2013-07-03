@@ -51,28 +51,9 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
         $this->__cloner__      = $cloner;
     }
 
-    /**
-     * {@inheritDoc}
-     * @param string $name
-     */
-    public function __get($name)
-    {
-        $this->__initializer__ && $this->__initializer__->__invoke($this, '__get', array($name));
 
-        return parent::__get($name);
-    }
 
-    /**
-     * {@inheritDoc}
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function __set($name, $value)
-    {
-        $this->__initializer__ && $this->__initializer__->__invoke($this, '__set', array($name, $value));
 
-        return parent::__set($name, $value);
-    }
 
 
 
@@ -195,17 +176,6 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setId($id = 0)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setId', array($id));
-
-        return parent::setId($id);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getId()
     {
 
@@ -217,12 +187,12 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setDate(\DateTime $date = NULL)
+    public function setDate(\DateTime $dateTime)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDate', array($date));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDate', array($dateTime));
 
-        return parent::setDate($date);
+        return parent::setDate($dateTime);
     }
 
     /**
@@ -239,17 +209,6 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setTransactionTotal($transactionTotal = 0)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTransactionTotal', array($transactionTotal));
-
-        return parent::setTransactionTotal($transactionTotal);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getTransactionTotal()
     {
 
@@ -261,12 +220,12 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setCreated(\DateTime $created = NULL)
+    public function setTransactionTotal()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCreated', array($created));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTransactionTotal', array());
 
-        return parent::setCreated($created);
+        return parent::setTransactionTotal();
     }
 
     /**
@@ -278,18 +237,6 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCreated', array());
 
         return parent::getCreated();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setTransactions($transactions = array (
-))
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTransactions', array($transactions));
-
-        return parent::setTransactions($transactions);
     }
 
     /**
@@ -339,17 +286,6 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function updateBalance()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateBalance', array());
-
-        return parent::updateBalance();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setInputFilter(\Zend\InputFilter\InputFilterInterface $inputFilter = NULL)
     {
 
@@ -367,28 +303,6 @@ class Date extends \Application\Entity\Date implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInputFilter', array());
 
         return parent::getInputFilter();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setOptions(array $options)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setOptions', array($options));
-
-        return parent::setOptions($options);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toArray()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'toArray', array());
-
-        return parent::toArray();
     }
 
 }

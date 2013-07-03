@@ -51,7 +51,7 @@
             </tr>
             <?php foreach ($this->paginator as $transaction) : ?>
                 <tr <?php echo !$transaction->getPayment() ? 'class="error"' : ''; ?>>                    
-                    <td>&pound;<?php echo $this->escapeHtml($transaction->amount);?></td>
+                    <td>&pound;<?php echo $transaction->amount;?></td>
                     <td><?php echo $this->escapeHtml($transaction->getPayment()->description);?></td>
                     <td><?php echo $this->escapeHtml($transaction->comment);?></td>
                     <td><?php echo $transaction->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 

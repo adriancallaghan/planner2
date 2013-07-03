@@ -14,14 +14,19 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+        
     public function indexAction()
     {
-
+        
         // Requested Date
         $dateTime = new \DateTime($this->params()->fromRoute('datestamp','now'));
         
         // Months surrounding requested Date
-        $months = new \DatePeriod(new \DateTime("{$dateTime->format('Y M D')} -1 months"),  new \DateInterval('P1M'), new \DateTime("{$dateTime->format('Y M D')} +2 months"));
+        $months = new \DatePeriod(
+                new \DateTime("{$dateTime->format('Y M D')} -1 months"),  
+                new \DateInterval('P1M'), 
+                new \DateTime("{$dateTime->format('Y M D')} +2 months")
+                );
         
         // Statement
         $statement = $this->getServiceLocator()->get('Application\Models\Statement');
@@ -39,12 +44,14 @@ class IndexController extends AbstractActionController
             )
         );
             
+        //$statement->setPeriod(new \DatePeriod(new \DateTime("now"),new \DateInterval('P1D'),10)); // testing
                                 
         // to view
         return new ViewModel(array(
             'statement'     => $statement,
             'today'         => $dateTime,
-            'months'        => $months
+            'months'        => $months,
+            'flashMessages' => $this->flashMessenger()->getMessages(),
             ));
     }
     

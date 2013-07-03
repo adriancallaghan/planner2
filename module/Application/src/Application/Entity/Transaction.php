@@ -53,7 +53,7 @@ class Transaction implements InputFilterAwareInterface
     protected $comment;
     
     /**
-     * @ORM\Column(name="amount",type="float")
+     * @ORM\Column(type="decimal", scale=2)
      */
     protected $amount;
     
@@ -82,6 +82,7 @@ class Transaction implements InputFilterAwareInterface
     }     
     
     public function setDate(Date $date = null){
+        
         $this->date = $date;
         return $this;
     }
@@ -121,8 +122,8 @@ class Transaction implements InputFilterAwareInterface
         return $this->comment;
     }  
     
-    public function setAmount($amount = '0'){
-        $this->amount = (float) $amount;
+    public function setAmount($amount = 0){
+        $this->amount = $amount;
         return $this;
     }
     

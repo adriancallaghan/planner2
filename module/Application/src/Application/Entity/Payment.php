@@ -73,7 +73,7 @@ class Payment implements InputFilterAwareInterface
     protected $day;
     
     /**
-     * @ORM\Column(name="amount",type="float")
+     * @ORM\Column(type="decimal", scale=2)
      */
     protected $amount;
         
@@ -128,7 +128,7 @@ class Payment implements InputFilterAwareInterface
         return $this->account;
     }
     
-    public function setTags($tags = array()){
+    /*public function setTags($tags = array()){
         $this->tags = $tags;
         return $this;
     }
@@ -152,7 +152,7 @@ class Payment implements InputFilterAwareInterface
         $tags[] = $tag;
         $this->setTags($tags);
         return $this;
-    }
+    }*/
 
     public function setTransactions($transactions = array()){
         $this->transactions = $transactions;
@@ -208,8 +208,8 @@ class Payment implements InputFilterAwareInterface
         return $this->day;
     } 
     
-    public function setAmount($amount = 0.00){
-        $this->amount = (float) $amount;
+    public function setAmount($amount = 0){
+        $this->amount = $amount;
         return $this;
     }
     
@@ -311,7 +311,7 @@ class Payment implements InputFilterAwareInterface
                         'options' => array(
                             'encoding' => 'UTF-8',
                             'min'      => 1,
-                            'max'      => 100,
+                            'max'      => 10,
                         ),
                     ),
                 ),

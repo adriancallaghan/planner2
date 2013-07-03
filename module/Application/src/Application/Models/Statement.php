@@ -26,7 +26,7 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
 
     public function getPeriod(){        
         if (!isset($this->_datePeriod)){
-            $this->setPeriod(new \DatePeriod());
+            $this->setPeriod(new \DatePeriod(new \DateTime("now"),new \DateInterval('P1D'),7));
         }
         return $this->_datePeriod;
     }
@@ -59,15 +59,16 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
     public function getBalance(\DateTime $dateTime){
         /*
          * returns balance on any given day
+         * 
          */
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');  
         
-        $dql = "SELECT SUM(e.transactionTotal) AS balance FROM Application\Entity\Date e " ."WHERE e.date < ?1";
+        $dql = "SELECT SUM(e.transactionTotal) AS balance FROM Application\Entity\Date e " ."WHERE e.date <=?1";
         $balance = $em->createQuery($dql)
                       ->setParameter(1, $dateTime)
                       ->getSingleScalarResult();
         
-        return (float) $balance;
+        return $balance;
         
     }
 
@@ -116,13 +117,12 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');        
 
         
-        /* fetch date - if not exists create a new date entry */
-    
+        /* fetch date - if not exists create a new date entry */       
         if (!$date = $em->getRepository('Application\Entity\Date')->findOneBy(array('date'=>$dateTime))){
-            
-            
+
             // create a date entry
-            $date = new \Application\Entity\Date(array('date'=>$dateTime));
+            $date = new \Application\Entity\Date();
+            $date->setDate($dateTime);
             $em->persist($date); 
 
             
