@@ -67,7 +67,7 @@ class TransactionController extends AbstractActionController
         }        
                 
         $paymentTitles = array();
-        foreach ($paymentDao->findAll() AS $v){
+        foreach ($paymentDao->findBy(array(),array('account'=>'DESC')) AS $v){
             $paymentTitles[$v->id] = "{$v->account->name} - {$v->description}";
         }
 

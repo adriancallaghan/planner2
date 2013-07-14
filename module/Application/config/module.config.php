@@ -14,6 +14,8 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index'   => 'Application\Controller\IndexController',
+            'Application\Controller\Statement'   => 'Application\Controller\StatementController',
+            'Application\Controller\Chart'   => 'Application\Controller\ChartController',
             'Application\Controller\Date' => 'Application\Controller\DateController',
             'Application\Controller\Transaction' => 'Application\Controller\TransactionController',
             'Application\Controller\Payment' => 'Application\Controller\PaymentController',
@@ -25,12 +27,9 @@ return array(
         'routes' => array(
             
             'home' => array(
-                'type' => 'segment',
+                'type' => 'literal',
                 'options' => array(
-                    'route'    => '/[:datestamp]',
-                    'constraints' => array(
-                        'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}',
-                    ),
+                    'route'    => '/',                    
                     'defaults' => array(
                         'controller' => 'Application\Controller\Index',
                         'action'     => 'index',
@@ -38,7 +37,34 @@ return array(
                 ),
             ),
             
-                        
+            'statement' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route'    => '/statement/[:datestamp]',
+                    'constraints' => array(
+                        'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Statement',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            
+            'chart' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route'    => '/chart/[:datestamp]',
+                    'constraints' => array(
+                        'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Chart',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),   
+            
             'dates' => array(
                 'type'    => 'segment',
                 'options' => array(
@@ -118,6 +144,14 @@ return array(
             'Home' => array(
                 'label' => 'Home',
                 'route' => 'home',                
+            ),
+            'Statement' => array(
+                'label' => 'Statement',
+                'route' => 'statement',                
+            ),
+            'Chart' => array(
+                'label' => 'Chart',
+                'route' => 'chart',                
             ),
             /*
             'dates' => array(
