@@ -17,40 +17,42 @@
         
         <!-- Css -->
         <?php echo $this->headLink()
-                ->prependStylesheet($this->basePath() . '/css/planner.css')
+                //->prependStylesheet($this->basePath() . '/css/planner.css')
                 ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
                 ->prependStylesheet('http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css')
-                ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css');                
+                ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css');                
         ?>
 
         
         
     </head>
     <body>
-        
-        <!-- Nav bar -->
-        <div class="main-navigation navbar navbar-fixed-top">
-            <div class="navbar-inner">
-              <div class="container">
-                  <a href="<?php echo $this->url('home') ?>" class="brand">Home</a>
-                  <div class="nav-collapse collapse">
-                      <?php
-                        echo $this->navigation('navigation')
-                            ->menu()
-                            ->setMinDepth(0)
-                            ->setMaxDepth(0)
-                            ->setUlClass('nav')
-                            ->render();
-                        ?>
-                      <form class="navbar-search pull-right">
-                          <input type="text" class="search-query" placeholder="Filter">
-                      </form>
-                  </div>
-              </div>
-            </div>
-        </div>
 
-        <div class="main-content container">
+        <div class="container">
+
+            
+            <!-- Nav bar -->
+            <div class="navbar">
+                <div class="navbar-inner">
+                  <!--div class="container">
+                      <!--a href="<?php echo $this->url('home') ?>" class="brand">Home</a>
+                      <div class="nav-collapse collapse"-->
+                          <?php
+                            echo $this->navigation('navigation')
+                                ->menu()
+                                ->setMinDepth(0)
+                                ->setMaxDepth(0)
+                                ->setUlClass('nav')
+                                ->render();
+                            ?>
+                          <!--form class="navbar-search pull-right">
+                              <input type="text" class="search-query" placeholder="Filter">
+                          </form-->
+                      <!--/div>
+                  </div-->
+                </div>
+            </div>
+
             
             <?php
             
