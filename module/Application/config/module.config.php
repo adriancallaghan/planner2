@@ -152,10 +152,10 @@ return array(
     
     'navigation' => array(
         'default' => array(
-            'Home' => array(
+            /*'Home' => array(
                 'label' => 'Home',
                 'route' => 'home',                
-            ),
+            ),*/
             'Statement' => array(
                 'label' => 'Statement',
                 'route' => 'statement',                

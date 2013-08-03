@@ -50,7 +50,7 @@
                 <!--th><a href="<?php echo $this->url('dates', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th-->
             </tr>
             <?php foreach ($this->statement as $date) : ?>
-                <tr>
+                <tr id="<?php echo $date->getDate()->format('mj'); ?>">
                     <td>
                         <?php //echo $this->escapeHtml($date->date); ?>                        
                         <?php echo $this->escapeHtml($date->getDate()->format('D jS \of M')); ?>
@@ -101,3 +101,12 @@
     
     
 </div>
+
+<script type="text/javascript">
+   
+    $(function(){
+
+        $('html,body').animate({ scrollTop: $('#<?php echo $today->format('mj'); ?>').offset().top - 150});
+    
+    });
+</script>

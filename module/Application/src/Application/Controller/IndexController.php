@@ -23,7 +23,8 @@ class IndexController extends AbstractActionController
         return $this->redirect()->toRoute(
             'statement',
             array(
-                'datestamp'=>$dateTime->format('Y-m-y')
+                'datestamp'=>$dateTime->format('Y-m-y'),
+                'hash'=>'#'.$dateTime->format('mj')
             )
         );
     }

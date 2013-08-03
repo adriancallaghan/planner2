@@ -11,6 +11,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Doctrine\Common\Collections;
 
 class ChartController extends AbstractActionController
 {
@@ -18,41 +19,42 @@ class ChartController extends AbstractActionController
     public function indexAction()
     {
         
-        // Requested Date
-        $dateTime = new \DateTime($this->params()->fromRoute('datestamp','now'));
-        
-        // Months surrounding requested Date
-        $months = new \DatePeriod(
-                new \DateTime("{$dateTime->format('Y M D')} -1 months"),  
-                new \DateInterval('P1M'), 
-                new \DateTime("{$dateTime->format('Y M D')} +2 months")
-                );
-        
-        // Statement
-        $statement = $this->getServiceLocator()->get('Application\Models\Statement');
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        /* change period
-         * 
-         * Should be one month of transactions from last Friday of last month, to last Thursday of this month, payday to payday
-         * This is loosely coupled
-         */
-        $statement->setPeriod(
-            new \DatePeriod(
-                new \DateTime("{$dateTime->format('Y M D')} last Friday of last month"),
-                new \DateInterval('P1D'),
-                new \DateTime("{$dateTime->format('Y M D')} last Friday of this month")
-            )
-        );
+        $accountEntity = $em->getRepository('Application\Entity\Account');
+
+        $accounts = $accountEntity->findAll();
+        
+        $labels = array();
+        $data = array();
+        
+        foreach($accounts AS $account){
             
-        //$statement->setPeriod(new \DatePeriod(new \DateTime("now"),new \DateInterval('P1D'),10)); // testing
-                                
-        // to view
+            $payments   = $account->getPayments();
+            foreach($payments AS $payment){                
+                          
+                $total = 0;
+                foreach($payment->getTransactions() AS $transaction){
+                    $amount = $transaction->amount;
+                    if ($amount<0){
+                        $total += abs($amount);
+                    }
+                }
+                
+                
+                if ($total>0){
+                    $labels[]   = $payment->description;
+                    $data[]     = $total;
+                }
+            }
+            
+        }
+        
         return new ViewModel(array(
-            'statement'     => $statement,
-            'today'         => $dateTime,
-            'months'        => $months,
-            'flashMessages' => $this->flashMessenger()->getMessages(),
-            ));
+            'labels'    => $labels,
+            'data'    => $data,
+            //'accounts' => $accountsCollection,
+        ));
     
     }
     
