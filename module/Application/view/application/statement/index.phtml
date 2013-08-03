@@ -25,9 +25,9 @@
                 <?php foreach($this->months AS $month): ?>
 
                     <li 
-                        class="<?php echo $this->today->format('Y-m')==$month->format('Y-m') ? 'active' : ($month->format('Y-m')=='2013-06' ? 'disabled' : ''); ?>" 
+                        class="<?php echo $this->today->format('Y-m')==$month->format('Y-m') ? 'active' : ($month->format('Y-m')=='2012-08' ? 'disabled' : ''); ?>" 
                         >
-                        <a href="<?php echo $month->format('Y-m')=='2013-06' ? '#' : $this->url('statement', array('datestamp'=>$month->format('Y-m-d')));?>" >
+                        <a href="<?php echo $month->format('Y-m')=='2012-08' ? '#' : $this->url('statement', array('datestamp'=>$month->format('Y-m-d')));?>" >
                             <?php echo $month->format('M Y'); ?>
                         </a>
                     </li>

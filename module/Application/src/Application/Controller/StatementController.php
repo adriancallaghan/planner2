@@ -55,6 +55,33 @@ class StatementController extends AbstractActionController
             ));
     }
     
+    public function rebuildbalanceAction(){
+        
+        /*
+         * Rebuilds balance
+         */
+        $em         = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $dateDao    = $em->getRepository('Application\Entity\Date');
+        $dates      = $dateDao->findAll();
+        $total      = count($dates);
+        
+       
+        
+        foreach($dates AS $key=>$date){
+            $em->persist($date);
+            $prevBal = $date->getTransactionTotal();
+            $date->setTransactionTotal();
+            $currBal = $date->getTransactionTotal();
+            $diff = $prevBal - $currBal;
+            echo "Processing $key/$total prev:$prevBal current:$currBal diff:$diff id:{$date->getId()}<br />";
+            
+        }
+        $em->flush(); // save
+
+        die('Complete');
+        
+    }
+    
     
         
 }

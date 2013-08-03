@@ -17,8 +17,7 @@ class IndexController extends AbstractActionController
         
     public function indexAction()
     {
-        
-        
+
         $dateTime = new \DateTime('now');
         
         return $this->redirect()->toRoute(
@@ -28,6 +27,7 @@ class IndexController extends AbstractActionController
             )
         );
     }
+
     
         
 }

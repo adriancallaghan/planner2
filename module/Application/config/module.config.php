@@ -51,6 +51,17 @@ return array(
                 ),
             ),
             
+            'statement-rebuild' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route'    => '/statement/rebuildbalance',                    
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Statement',
+                        'action'     => 'rebuildbalance',
+                    ),
+                ),
+            ),
+            
             'chart' => array(
                 'type' => 'segment',
                 'options' => array(

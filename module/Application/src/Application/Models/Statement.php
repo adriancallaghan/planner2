@@ -68,7 +68,8 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
                       ->setParameter(1, $dateTime)
                       ->getSingleScalarResult();
         
-        return $balance - "350.02"; // app start balance
+        //return $balance - "350.02"; // app start balance
+        return $balance - "381.22"; // app start balance
         
     }
 
@@ -203,6 +204,7 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
         return $date;
 
     }
-
+    
+    
 }
 
