@@ -24,7 +24,7 @@ class IndexController extends AbstractActionController
             'statement',
             array(
                 'datestamp'=>$dateTime->format('Y-m-d'),
-                'hash'=>'#'.$dateTime->format('mj')
+                //'hash'=>'#'.$dateTime->format('mj')
             )
         );
     }
