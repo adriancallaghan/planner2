@@ -2,7 +2,17 @@
 
 <?php $this->headTitle('Charts'); ?>
 
-<canvas id="canvas" width="1200" height="500"></canvas>
+<div class="row">
+    <ul class="nav nav-tabs nav-stacked span2">
+        <li><a href="">summary</a></li>
+    </ul>
+
+    <div class="span10" style="height:600px;">
+        <canvas id="canvas" width="100" height="200"></canvas>
+    </div>
+</div>
+
+
 
 
         
@@ -25,5 +35,15 @@ var barChartData = {
 
 }
 
-var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
+function redraw(canvas){
+    var myLine = new Chart(canvas.getContext("2d")).Bar(barChartData);   
+    canvas.width  = canvas.parentNode.offsetWidth;
+    canvas.height = canvas.parentNode.offsetHeight;
+    
+}
+
+
+var canvas = document.getElementById("canvas");
+window.addEventListener("resize", redraw(canvas));
+redraw(canvas);
 </script>
