@@ -6,7 +6,11 @@
 <div class="row">
            
     <div class="span4 pull-left">
-        <h4><?php echo $this->statement->getStatementTitle(); ?></h4>
+        <h4>
+            <a href='<?php echo $this->url('chart',array('action'=>'average', 'datestamp' => $this->today->format('Y-m')));?>' title='<?php echo $this->statement->getStatementTitle(); ?>'>
+                <?php echo $this->statement->getStatementTitle(); ?>
+            </a>
+        </h4>
         <h5>
             <span class="icon-list"></span> 
             <?php 

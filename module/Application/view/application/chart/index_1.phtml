@@ -1,34 +1,25 @@
 
 
+<?php $this->headTitle('Charts'); ?>
+
 <div class="row">
-    
-   
     <ul class="nav nav-tabs nav-stacked span2">
         <li class="nav-header">Charts</li>
-        <li class="active">
-            <a href="">Home</a>
-        </li>
-        <li>
-            <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
-                Average
-            </a>            
-        </li>
-        <li>
-            <a href='<?php echo $this->url('chart',array('action'=>'activity'));?>' title='Activity Chart'>
-                Activity
-            </a>         
-        </li>
+        <li class="active"><a href="">Summary</a></li>
+        <li><a href="">Summary</a></li>
+        <li><a href="">Summary</a></li>
+        <li><a href="">Summary</a></li>
     </ul>
-        
-        
-    
-    <div class="span10" style="height:600px;">
-        <canvas id="canvas" width="800" height="600"></canvas>
-    </div>
 
+    <div class="span10" style="height:600px;">
+        <canvas id="canvas" width="100" height="200"></canvas>
+    </div>
 </div>
 
 
+
+
+        
 <script>
 
 var barChartData = {
@@ -60,6 +51,3 @@ var canvas = document.getElementById("canvas");
 window.addEventListener("resize", redraw(canvas));
 redraw(canvas);
 </script>
-
-
-
