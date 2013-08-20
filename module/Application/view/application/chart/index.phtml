@@ -21,45 +21,38 @@
     </ul>
         
         
-    
-    <div class="span10" style="height:600px;">
-        <canvas id="canvas" width="800" height="600"></canvas>
-    </div>
+   
+    <table class="table table-condensed table-bordered table-hover span10">
+        <tr>
+             <th><?php echo implode('</th><th>',array_keys($this->data[0])); ?></th>           
+        </tr>
+        <?php foreach($this->data AS $row): ?>
+            <tr>
+                <?php foreach($row AS $key=>$val) : ?>
+                    
+                    <td>
+                        <a href='<?php echo $this->url('chart',array('action'=>'activity','id'=>$row['id']));?>'>
+                        <?php
+                        switch($key){
+
+                            case 'Amount':
+                            case 'Average':
+                                echo "&pound;&nbsp;".number_format($val,2);
+                                break;
+                            default:
+                                echo $val;
+                        }
+                        ?>
+                        </a>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+    </table>
 
 </div>
 
 
-<script>
-
-var barChartData = {
-    labels : [<?php echo '"'.implode('","',$this->labels).'"'; ?>],
-    datasets : [
-    {
-    fillColor : "rgba(220,220,220,0.5)",
-    strokeColor : "rgba(220,220,220,1)",
-    data : [<?php echo implode(',',$this->data); ?>]
-    },
-    /*{
-    fillColor : "rgba(151,187,205,0.5)",
-    strokeColor : "rgba(151,187,205,1)",
-    data : [28,48,40,19,96,27,100]
-    }*/
-    ]
-
-}
-
-function redraw(canvas){
-    var myLine = new Chart(canvas.getContext("2d")).Bar(barChartData);   
-    canvas.width  = canvas.parentNode.offsetWidth;
-    canvas.height = canvas.parentNode.offsetHeight;
-    
-}
-
-
-var canvas = document.getElementById("canvas");
-window.addEventListener("resize", redraw(canvas));
-redraw(canvas);
-</script>
 
 
 

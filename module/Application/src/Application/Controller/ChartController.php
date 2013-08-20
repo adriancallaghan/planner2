@@ -22,34 +22,30 @@ class ChartController extends AbstractActionController
         /*
          * overall data
          */
-        $data = array();
-        $labels = array();        
-        $excludes = array();
+
+        /*
+        SELECT p.id, p.description AS Payment,a.name AS Account, SUM(t.amount) AS Amount 
+        FROM payment p 
+        LEFT JOIN account a ON p.account_id = a.id 
+        LEFT JOIN transaction t ON t.payment_id = p.id 
+        LEFT JOIN `date` d ON t.date_id = d.id  
+        GROUP BY p.id 
+        ORDER BY Amount DESC
+        */
         
-        foreach($this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->createQuery(
-                  'SELECT p.id, p.description AS Payment,a.name AS Account, SUM(t.amount) AS Amount FROM 
-                  Application\Entity\Payment p JOIN p.account a JOIN p.transactions t GROUP BY p.id ORDER BY p.id ASC
+        $data = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->createQuery(
                   '
-                  )->getScalarResult() AS $section){
-
-            if (in_array($section['id'], $excludes)){                
-                continue;
-            }
-
-            mt_srand((double)microtime()*1000000);
-              $col = '';
-              while(strlen($col)<6){
-                $col.= sprintf("%02X", mt_rand(0, 255));
-              }
-
-            $data[]     = $section['Amount'];  
-            $labels[]   = "{$section['Account']} {$section['Payment']}";
-
-        }  
-
+                      SELECT p.id, p.description AS Payment,a.name AS Account, SUM(t.amount) AS Amount, AVG(t.amount) AS Average 
+                      FROM Application\Entity\Payment p 
+                      JOIN p.account a 
+                      JOIN p.transactions t 
+                      GROUP BY p.id 
+                      ORDER BY Amount DESC
+                  '
+                  )->getScalarResult();
+ 
         return new ViewModel(array(
-            'data'      => $data,
-            'labels'    => $labels,
+            'data'      => $data
         ));
         
     }
@@ -83,7 +79,7 @@ class ChartController extends AbstractActionController
                 ORDER BY p.id ASC
                 '
                 )->getScalarResult();
-       
+               
         $thisMonthData = $em->createQuery(
                 'SELECT p.id, p.description AS Payment,a.name AS Account, SUM(t.amount) AS Amount 
                 FROM Application\Entity\Payment p 
@@ -162,7 +158,19 @@ class ChartController extends AbstractActionController
     }
     
     
+    public function ActivityAction(){
         
+                
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $paymentDao = $em->getRepository('Application\Entity\Payment');
+ 
+        $payment = $em->getRepository('Application\Entity\Payment')->find($this->params()->fromRoute('id',0));
+        
+        return new ViewModel(array(
+            'payment'      => $payment
+        ));
+        
+    }    
     
     
     /*public function indexAction()
