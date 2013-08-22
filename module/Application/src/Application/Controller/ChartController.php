@@ -39,6 +39,7 @@ class ChartController extends AbstractActionController
                       FROM Application\Entity\Payment p 
                       JOIN p.account a 
                       JOIN p.transactions t 
+                      WHERE t.active=1 
                       GROUP BY p.id 
                       ORDER BY Amount DESC
                   '
@@ -75,6 +76,7 @@ class ChartController extends AbstractActionController
                 FROM Application\Entity\Payment p 
                 JOIN p.account a 
                 JOIN p.transactions t 
+                WHERE t.active=1 
                 GROUP BY p.id 
                 ORDER BY p.id ASC
                 '
@@ -86,7 +88,7 @@ class ChartController extends AbstractActionController
                 JOIN p.account a 
                 JOIN p.transactions t 
                 JOIN t.date d 
-                WHERE d.date BETWEEN ?1 AND ?2 
+                WHERE d.date BETWEEN ?1 AND ?2 AND t.active=1 
                 GROUP BY p.id 
                 ORDER BY p.id ASC
                 '
@@ -101,7 +103,7 @@ class ChartController extends AbstractActionController
                 JOIN p.account a 
                 JOIN p.transactions t 
                 JOIN t.date d 
-                WHERE d.date BETWEEN ?1 AND ?2 
+                WHERE d.date BETWEEN ?1 AND ?2 AND t.active=1 
                 GROUP BY p.id 
                 ORDER BY p.id ASC
                 '
@@ -161,10 +163,8 @@ class ChartController extends AbstractActionController
     public function ActivityAction(){
         
                 
-        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $paymentDao = $em->getRepository('Application\Entity\Payment');
- 
-        $payment = $em->getRepository('Application\Entity\Payment')->find($this->params()->fromRoute('id',0));
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager'); 
+        $payment = $em->getRepository('Application\Entity\Payment')->find($this->params()->fromRoute('id',1));
         
         return new ViewModel(array(
             'payment'      => $payment
