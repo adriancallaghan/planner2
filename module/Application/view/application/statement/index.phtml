@@ -6,7 +6,11 @@
 <div class="row">
            
     <div class="span4 pull-left">
-        <h4><?php echo $this->statement->getStatementTitle(); ?></h4>
+        <h4>
+            <a href='<?php echo $this->url('chart',array('action'=>'average', 'datestamp' => $this->today->format('Y-m')));?>' title='<?php echo $this->statement->getStatementTitle(); ?>'>
+                <?php echo $this->statement->getStatementTitle(); ?>
+            </a>
+        </h4>
         <h5>
             <span class="icon-list"></span> 
             <?php 
@@ -50,7 +54,18 @@
                 <!--th><a href="<?php echo $this->url('dates', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th-->
             </tr>
             <?php foreach ($this->statement as $date) : ?>
-                <tr id="<?php echo $date->getDate()->format('mj'); ?>">
+                <tr 
+                    id="<?php echo $date->getDate()->format('mj'); ?>" 
+                    class="<?php                
+                    if ($this->today->format('Ymj')==$date->getDate()->format('Ymj')){
+                        echo 'success'; 
+                    }
+                    elseif ($this->statement->getBalance($date->getDate()) < -450){
+                        echo 'error';
+                    }
+                    
+                    ?>"
+                >
                     <td>
                         <?php //echo $this->escapeHtml($date->date); ?>                        
                         <?php echo $this->escapeHtml($date->getDate()->format('D jS \of M')); ?>
@@ -106,7 +121,11 @@
    
     $(function(){
 
+<<<<<<< HEAD
         $('html,body').animate({ scrollTop: $('#<?php echo $today->format('mj'); ?>').offset().top});
+=======
+        $('html,body').animate({ scrollTop: $('#<?php echo $this->today->format('mj'); ?>').offset().top - 150});
+>>>>>>> 8804e634ae6e9aba4df1d2684cff3720899dc752
     
     });
 </script>

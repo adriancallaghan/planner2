@@ -65,9 +65,11 @@ return array(
             'chart' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route'    => '/chart/[:datestamp]',
+                    'route'    => '/chart[/:action][/:datestamp][/:id][/]',
                     'constraints' => array(
-                        'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}',
+                        'id'     => '[0-9]{1,6}',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Chart',
