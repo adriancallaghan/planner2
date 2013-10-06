@@ -148,10 +148,10 @@ class TransactionController extends AbstractActionController
         }
         
         $dateTitles = array();
-        foreach ($dateDao->findAll() AS $v){
+        foreach ($dateDao->findBy(array(),array('date'=>'ASC')) AS $v){
             $dateTitles[$v->getId()] = "{$v->getDate()->format('Y-m-d')}";
         }        
-                
+        
         $paymentTitles = array();
         foreach ($paymentDao->findAll() AS $v){
             $paymentTitles[$v->id] = "{$v->account->name} - {$v->description}";

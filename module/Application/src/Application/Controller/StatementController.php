@@ -35,14 +35,27 @@ class StatementController extends AbstractActionController
          * 
          * Should be one month of transactions from last Friday of last month, to last Thursday of this month, payday to payday
          * This is loosely coupled
+         * 
+         * altered on 6 October 2013 to allow for whole month statements (disabled until the payment mechanism is confirmed)
          */
-        $statement->setPeriod(
-            new \DatePeriod(
-                new \DateTime("{$dateTime->format('Y M D')} last Friday of last month"),
-                new \DateInterval('P1D'),
-                new \DateTime("{$dateTime->format('Y M D')} last Friday of this month")
-            )
-        );
+        if ($dateTime > new \DateTime("1st october 2013") && false){
+            $statement->setPeriod(
+                new \DatePeriod(
+                    new \DateTime("{$dateTime->format('Y M D')} first day of this month"),
+                    new \DateInterval('P1D'),
+                    new \DateTime("{$dateTime->format('Y M D')} last day of this month")
+                )
+            );
+        } else {
+        
+            $statement->setPeriod(
+                new \DatePeriod(
+                    new \DateTime("{$dateTime->format('Y M D')} last Friday of last month"),
+                    new \DateInterval('P1D'),
+                    new \DateTime("{$dateTime->format('Y M D')} last Friday of this month")
+                )
+            );
+        }
             
         //$statement->setPeriod(new \DatePeriod(new \DateTime("now"),new \DateInterval('P1D'),10)); // testing
                                 
