@@ -20,7 +20,7 @@ class StatementController extends AbstractActionController
         
         // Requested Date
         $dateTime = new \DateTime($this->params()->fromRoute('datestamp','now'));
-        
+
         // Months surrounding requested Date
         $months = new \DatePeriod(
                 new \DateTime("{$dateTime->format('Y M D')} -1 months"),  
@@ -38,16 +38,27 @@ class StatementController extends AbstractActionController
          * 
          * altered on 6 October 2013 to allow for whole month statements (disabled until the payment mechanism is confirmed)
          */
-        if ($dateTime > new \DateTime("1st october 2013") && false){
+        if ($dateTime > new \DateTime("1st october 2013")){
             $statement->setPeriod(
                 new \DatePeriod(
                     new \DateTime("{$dateTime->format('Y M D')} first day of this month"),
                     new \DateInterval('P1D'),
-                    new \DateTime("{$dateTime->format('Y M D')} last day of this month")
+                    new \DateTime("{$dateTime->format('Y M D')} first day of next month")
                 )
             );
         } else {
         
+            //////////////////////////////////////////////////////////////////////////////////////////
+            // SOMETIMES A DATE WILL FALL OUTSIDE THE LAST FRIDAY OF THE STATEMENT, CAUSING THE
+            // STATEMENT FOR THE MONTH TO BE SHOWN, WHILE THE CURRENT DATE IS ACTUALLY ON NEXT MONTHS STATEMENT
+            if (new \DateTime("{$dateTime->format('Y M D')} last Friday of this month") >= $dateTime){                
+                // date is inside statement  
+            } else {                
+                // date is outside of statement, trigger next months
+            }
+            // !! NEVER FIXED - AS MAY NOT BE NEEDED ANYMORE ATER SWITCHING MONTHLYS ON !!
+            //////////////////////////////////////////////////////////////////////////////////////////
+            
             $statement->setPeriod(
                 new \DatePeriod(
                     new \DateTime("{$dateTime->format('Y M D')} last Friday of last month"),
