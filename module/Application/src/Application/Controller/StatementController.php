@@ -18,6 +18,11 @@ class StatementController extends AbstractActionController
     public function indexAction()
     {
         
+        $em                 = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $accountDao         = $em->getRepository('Application\Entity\Account');
+        //$clientAccountsDao  = $em->getRepository('Application\Entity\ClientAccounts');
+        
+        
         // Requested Date
         $dateTime = new \DateTime($this->params()->fromRoute('datestamp','now'));
 
@@ -28,9 +33,20 @@ class StatementController extends AbstractActionController
                 new \DateTime("{$dateTime->format('Y M D')} +2 months")
                 );
         
+                
+        // fetch client account based on logged in client
+        //$clientAccounts = $clientAccountsDao->find(1);
+        //var_dump($client->accounts);       
+                
+        // if in array of client account's, select account, or throw exception
+        //$account = $accountDao->find(39);
+        $account = $accountDao->find(30);
+                
         // Statement
         $statement = $this->getServiceLocator()->get('Application\Models\Statement');
-
+        
+        $statement->setAccount($account);
+        
         /* change period
          * 
          * Should be one month of transactions from last Friday of last month, to last Thursday of this month, payday to payday

@@ -29,6 +29,15 @@ class AccountForm extends Form
                 'autocomplete'=>'off',
             ),
         ));
+        $this->add(array(
+            'name' => 'startBalance',
+            'attributes' => array(
+                'type'  => 'text',
+            ),
+            'options' => array(
+                'label' => 'Start Balance',
+            ),
+        )); 
         $this->add(array(     
             'type' => 'Zend\Form\Element\Checkbox',       
             'name' => 'active',

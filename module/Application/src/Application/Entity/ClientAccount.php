@@ -2,24 +2,24 @@
 
 namespace Application\Entity;
 
+
 use Doctrine\ORM\Mapping as ORM;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilterInterface; 
 
 /**
- * An Account.
+ * ClientAccount
  *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks 
- * @ORM\Table(name="account")
+ * @ORM\Table(name="clientAccount")
  * @property int $id
  * @property string $name
- * @property float $startBalance
  * @property string $created
  * @property boolean $active
  */
-class Account 
+class ClientAccount 
 {
     
     use \Application\Traits\ReadOnly;
@@ -33,18 +33,6 @@ class Account
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(name="name", type="string")
-     */
-    protected $name;
-
-    
-    /**
-     * @ORM\Column(type="decimal", scale=2)
-     */
-    protected $startBalance;
-    
     
     /**
      * @ORM\Column(name="created", type="datetime")
@@ -57,13 +45,12 @@ class Account
      */
     protected $active;
     
-    
-    /** 
+
+     /** 
      * @param \Doctring\Common\Collections\ArrayCollection $property
-     * @ORM\OneToMany(targetEntity="Payment", mappedBy="account", cascade={"persist", "remove"}) 
+     * @ORM\OneToMany(targetEntity="ClientAccount", mappedBy="account", cascade={"persist", "remove"}) 
      */ 
-    protected $payments;
-    
+    protected $clientAccount;
     
     
     public function setId($id = 0){
@@ -77,32 +64,6 @@ class Account
             $this->setId();
         }
         return $this->id;
-    }
-    
-    public function setName($name = ''){
-        $this->name = $name;
-        return $this;
-    }
-    
-    public function getName(){
-        
-        if (!isset($this->name)){
-            $this->setName();
-        }
-        return $this->name;
-    }   
-
-    public function setStartBalance($startBalance = 0){
-        $this->startBalance = (int)$startBalance;
-        return $this;
-    }
-    
-    public function getStartBalance(){
-        
-        if (!isset($this->startBalance)){
-            $this->setStartBalance();
-        }
-        return $this->startBalance;
     }    
     
     public function setCreated(\DateTime $created = null){
@@ -136,29 +97,29 @@ class Account
         return $this->active;
     } 
     
-    public function setPayments($payment = array()){
-        $this->payments = $payment;
+    public function setAccount(Account $account = null){
+        $this->account = $account;
         return $this;
     }
     
-    public function getPayments(){
+    public function getAccount(){
         
-        if (!isset($this->payments)){
-            $this->setPayments();
+        if (!isset($this->account)){
+            $this->setAccount();
         }
-        return $this->payments;
+        return $this->account;
     }
     
-    public function removePayment(Payment $payment) {
+    public function removeAccount(Account $account) {
         
         throw new \Exception('Not implemented'); // deleted by the entity manager
     }
  
-    public function addPayment(Payment $payment) {
-        $payment->setAccount($this);
-        $payments = $this->getPayments();        
-        $payments[] = $payment;
-        $this->setPayments($payments);
+    public function addAccount(Account $account) {
+        $account->setAccount($this);
+        $accounts = $this->getAccounts();        
+        $accounts[] = $account;
+        $this->setAccounts($accounts);
         return $this;
     }
     
@@ -170,8 +131,9 @@ class Account
     {
         $this->toArray(); // makes sure we have all default values set
     }
-    
 
+    
+    
     public function setInputFilter(InputFilterInterface $inputFilter = null)
     {
         
@@ -208,24 +170,6 @@ class Account
                 ),
             )));
 
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'startBalance',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 10,
-                        ),
-                    ),
-                ),
-            )));  
             
         }
         
@@ -243,5 +187,5 @@ class Account
         
         return $this->inputFilter;
     } 
-
+    
 }

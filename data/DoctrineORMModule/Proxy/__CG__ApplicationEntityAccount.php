@@ -83,10 +83,10 @@ class Account extends \Application\Entity\Account implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'inputFilter', 'id', 'name', 'created', 'active', 'payments');
+            return array('__isInitialized__', 'inputFilter', 'id', 'name', 'startBalance', 'created', 'active', 'payments');
         }
 
-        return array('__isInitialized__', 'inputFilter', 'id', 'name', 'created', 'active', 'payments');
+        return array('__isInitialized__', 'inputFilter', 'id', 'name', 'startBalance', 'created', 'active', 'payments');
     }
 
     /**
@@ -234,6 +234,28 @@ class Account extends \Application\Entity\Account implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getName', array());
 
         return parent::getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setStartBalance($startBalance = 0)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStartBalance', array($startBalance));
+
+        return parent::setStartBalance($startBalance);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStartBalance()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStartBalance', array());
+
+        return parent::getStartBalance();
     }
 
     /**

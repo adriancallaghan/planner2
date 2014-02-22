@@ -16,6 +16,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @ORM\Table(name="date")
  * @property int $id
  * @property string $date
+ * @property int $account
  * @property string $transaction
  */
 class Date 
@@ -59,6 +60,13 @@ class Date
     protected $created;
     
 
+     /** 
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="date")
+     */
+    protected $account;
+    
+    
+    
     public function __construct() {
 
         $this->date = new \DateTime();
@@ -66,6 +74,18 @@ class Date
         $this->transactions = new Collections\ArrayCollection(); // no setter for this
     }
     
+        public function setAccount(Account $account = null){
+        $this->account = $account;
+        return $this;
+    }
+    
+    public function getAccount(){
+        
+        if (!isset($this->account)){
+            $this->setAccount();
+        }
+        return $this->account;
+    }
     
     public function getId(){        
         return $this->id;

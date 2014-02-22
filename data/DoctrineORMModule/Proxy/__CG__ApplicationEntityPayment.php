@@ -83,10 +83,10 @@ class Payment extends \Application\Entity\Payment implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'inputFilter', 'id', 'description', 'transactions', 'account', 'frequency', 'day', 'amount', 'created', 'active');
+            return array('__isInitialized__', 'inputFilter', 'id', 'description', 'transactions', 'account', 'payee', 'frequency', 'day', 'amount', 'created', 'active');
         }
 
-        return array('__isInitialized__', 'inputFilter', 'id', 'description', 'transactions', 'account', 'frequency', 'day', 'amount', 'created', 'active');
+        return array('__isInitialized__', 'inputFilter', 'id', 'description', 'transactions', 'account', 'payee', 'frequency', 'day', 'amount', 'created', 'active');
     }
 
     /**
@@ -256,6 +256,28 @@ class Payment extends \Application\Entity\Payment implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAccount', array());
 
         return parent::getAccount();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPayee(\Application\Entity\Account $payee = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPayee', array($payee));
+
+        return parent::setPayee($payee);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPayee()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPayee', array());
+
+        return parent::getPayee();
     }
 
     /**

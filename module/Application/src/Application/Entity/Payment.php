@@ -17,6 +17,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @property int $id
  * @property text $description
  * @property integer $account
+ * @property integer $payee
  * @property integer $tags
  * @property integer $frequency
  * @property integer $day
@@ -55,6 +56,11 @@ class Payment implements InputFilterAwareInterface
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="payment")
      */
     protected $account;
+    
+    /** 
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="payment")
+     */
+    protected $payee;
     
     /** 
      * HAS BEEN DISABLED IN THE COMMENTS LOOK!!!!
@@ -126,6 +132,19 @@ class Payment implements InputFilterAwareInterface
             $this->setAccount();
         }
         return $this->account;
+    }
+ 
+    public function setPayee(Account $payee = null){
+        $this->payee = $payee;
+        return $this;
+    }
+    
+    public function getPayee(){
+        
+        if (!isset($this->payee)){
+            $this->setPayee();
+        }
+        return $this->payee;
     }
     
     /*public function setTags($tags = array()){
