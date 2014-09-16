@@ -5,8 +5,8 @@
    
     <ul class="nav nav-tabs nav-stacked span2">
         <li class="nav-header">Charts</li>
-        <li class="active">
-            <a href="">Home</a>
+        <li> <!--class="active"-->
+            <a href="<?php echo $this->url('chart',array('action'=>'index'));?>">Home</a>
         </li>
         <li>
             <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
