@@ -74,7 +74,7 @@
             <?php 
 		foreach($this->data AS $data){ ?>
 			<tr>
-				<td><?php echo $data['Date']; ?></td>
+				<td><a href="<?php echo $this->url('statement', array('datestamp'=>$data['Date']->format('Y-m-d')));?>"><?php echo $data['Date']->format('M'); ?></a></td>
 				<td style="color:red;">&pound;<?php echo number_format($data['Balance'],2); ?></td>
 				<td style="color:green;">&pound;<?php echo number_format($data['Profit'],2); ?></td>
 				<td>&pound;<?php echo number_format($data['In'],2); ?></td>
@@ -101,7 +101,7 @@
 	labels: [
 	<?php
 	foreach($this->data AS $data){
-		echo "'{$data['Date']}',";
+		echo "'{$data['Date']->format('M')}',";
 	}
 	?>
 	],
