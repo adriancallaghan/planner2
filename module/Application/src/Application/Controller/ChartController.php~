@@ -318,7 +318,7 @@ class ChartController extends AbstractActionController
 		$data[$month->format("U")] = array(
 			'In'		=>$in,
 			'Out'		=>$out,
-			'Profit'		=>$in + $out,
+			'Avg'		=>$in + $out,
 			'Balance'	=>$statement->getBalance($month),
 			'Date'		=>$month->format('M')
 		);

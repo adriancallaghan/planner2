@@ -3,12 +3,22 @@
 <div class="row">
     
    
-    <ul class="nav nav-tabs nav-stacked span2">
+    <ul class="nav nav-pills nav-stacked span2">
         <li class="nav-header">Charts</li>
-        <li> <!--class="active"-->
+        <li class="active">
             <a href="<?php echo $this->url('chart',array('action'=>'index'));?>">Home</a>
         </li>
         <li>
+            <a href='<?php echo $this->url('chart',array('action'=>'month'));?>' title='Month Chart'>
+                Month
+            </a>            
+        </li>
+	<li>
+            <a href='<?php echo $this->url('chart',array('action'=>'year'));?>' title='Year Chart'>
+                Year
+            </a>            
+        </li>
+	<li>
             <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
                 Average
             </a>            
