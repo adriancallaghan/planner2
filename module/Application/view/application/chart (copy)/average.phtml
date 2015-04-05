@@ -1,0 +1,117 @@
+
+
+<?php $this->headTitle('Charts'); ?>
+
+
+<div class='row'>
+
+    <div class="span12">
+                
+	<ul class="nav nav-pills nav-stacked span2">
+		<li class="nav-header">Charts</li>
+		<li>
+		    <a href="<?php echo $this->url('chart',array('action'=>'index'));?>">Home</a>
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'month'));?>' title='Month Chart'>
+		        Month
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'year'));?>' title='Year Chart'>
+		        Year
+		    </a>            
+		</li>
+		<li class="active">
+		    <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
+		        Average
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'activity'));?>' title='Activity Chart'>
+		        Activity
+		    </a>         
+		</li>
+	    </ul>
+
+
+        <div class="pagination pull-right"> 
+            <ul>
+                <?php foreach($this->months AS $month): ?>
+
+                    <li 
+                        class="<?php echo $this->today->format('Y-m')==$month->format('Y-m') ? 'active' : ($month->format('Y-m')=='2012-08' ? 'disabled' : ''); ?>" 
+                        >
+                        <a href="<?php echo $month->format('Y-m')=='2012-08' ? '#' : $this->url('chart', array('action'=>'average','datestamp'=>$month->format('Y-m')));?>" >
+                            <?php echo $month->format('M Y'); ?>
+                        </a>
+                    </li>
+
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        
+    </div>
+    
+    
+    
+    
+    <div class="span12">
+        <canvas id="canvas" width="800" height="580"></canvas>
+    </div>
+    
+
+    <div class="span6 offset2">
+        <h1>Average Graph</h1>
+        <p>
+            Graph shows <span style='color:red;'>this month</span> and <span style='color:green;'>last month</span>.
+            The graph is designed to show what is costing more than average and what is costing less than average for the two months.<br />
+            The negative values represent less money, and the positive values more money.
+        </p>
+    </div>
+
+</div>
+        
+<script type="text/javascript">
+
+    var options = null;
+    var data = {
+            labels : [<?php echo '"'.implode('","',$this->labels).'"'; ?>],
+            datasets : [
+                    {
+                            fillColor : "rgba(0,255,0,0.5)",
+                            strokeColor : "rgba(0,255,0,0.5)",
+                            pointColor : "rgba(0,255,0,1)",
+                            pointStrokeColor : "#fff",
+                            data : [<?php echo implode(',',$this->data['last']); ?>]
+                    },
+                    {
+                            fillColor : "rgba(255,0,0,0.2)",
+                            strokeColor : "rgba(255,0,0,0.5)",
+                            pointColor : "rgba(255,0,0,1)",
+                            pointStrokeColor : "#fff",
+                            data : [<?php echo implode(',',$this->data['this']); ?>]
+                    },
+                    /*{
+                            fillColor : "rgba(100,100,201,0.1)",
+                            strokeColor : "rgba(0,0,201,1)",
+                            pointColor : "rgba(0,0,255,1)",
+                            pointStrokeColor : "#fff",
+                            data : [<?php echo implode(',',$this->data['avg']); ?>]
+                    }        */
+            ]
+    }
+
+
+    function redraw(canvas){
+        var myChart = new Chart(canvas.getContext("2d")).Line(data,options);   
+        canvas.width  = canvas.parentNode.offsetWidth;
+        canvas.height = canvas.parentNode.offsetHeight;       
+    }
+
+
+    var canvas = document.getElementById("canvas");
+    window.addEventListener("resize", redraw(canvas));
+    redraw(canvas);
+    
+</script>

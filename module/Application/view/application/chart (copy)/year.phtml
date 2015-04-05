@@ -1,0 +1,191 @@
+
+
+<?php $this->headTitle('Charts'); ?>
+
+
+<div class='row'>
+
+    <div class="span12">
+                
+	<ul class="nav nav-pills nav-stacked span2">
+		<li class="nav-header">Charts</li>
+		<li>
+		    <a href="<?php echo $this->url('chart',array('action'=>'index'));?>">Home</a>
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'month'));?>' title='Month Chart'>
+		        Month
+		    </a>            
+		</li>
+		<li class="active">
+		    <a href='<?php echo $this->url('chart',array('action'=>'year'));?>' title='Year Chart'>
+		        Year
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
+		        Average
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'activity'));?>' title='Activity Chart'>
+		        Activity
+		    </a>         
+		</li>
+	    </ul>
+
+        <div class="pagination pull-right"> 
+            <ul>
+                <?php foreach($this->years AS $year): ?>
+
+                    <li 
+                        class="<?php echo $this->today->format('Y-m')==$year->format('Y-m') ? 'active' : ($year->format('Y-m')=='2012-08' ? 'disabled' : ''); ?>" 
+                        >
+                        <a href="<?php echo $year->format('Y-m')=='2012-08' ? '#' : $this->url('chart', array('action'=>'year','datestamp'=>$year->format('Y-m')));?>" >
+                            <?php echo $year->format('Y'); ?>
+                        </a>
+                    </li>
+
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        
+    </div>
+  
+    
+    
+    <div class="span12">
+        <canvas id="canvas" width="800" height="580"></canvas>
+    </div>
+    
+
+    <div class="span6 offset2">
+        <h1>Average Graph</h1>
+        <p>
+            Graph shows <span style='color:red;'>balance</span> and <span style='color:green;'>profit</span>.
+		<table class="table table-bordered table-condensed table-hover">
+			<tr>
+				<th>Month</th>
+				<th>Balance</th>
+				<th>Profit</th>
+				<th>In</th>
+				<th>Out</th>
+			</tr>
+            <?php 
+		foreach($this->data AS $data){ ?>
+			<tr>
+				<td><a href="<?php echo $this->url('chart',array('action'=>'average','datestamp'=>$data['Date']->format('Y-m')));?>"><?php echo $data['Date']->format('M'); ?></a></td>
+				<td style="color:red;">&pound;<?php echo number_format($data['Balance'],2); ?></td>
+				<td style="color:green;">&pound;<?php echo number_format($data['Profit'],2); ?></td>
+				<td>&pound;<?php echo number_format($data['In'],2); ?></td>
+				<td>&pound;<?php echo number_format($data['Out'],2); ?></td>
+			</tr>
+		<?php
+		}
+
+	?> 
+		</table>
+        </p>
+    </div>
+
+</div>
+       
+<script type="text/javascript">
+	var options = {
+		scaleShowGridLines : true,
+		scaleGridLineColor : "rgba(0,0,0,.05)",
+ 		scaleShowVerticalLines: true,
+	};
+
+	var data = {
+	labels: [
+	<?php
+	foreach($this->data AS $data){
+		echo "'{$data['Date']->format('M')}',";
+	}
+	?>
+	],
+
+	datasets: [
+	{
+	    label: "Balance",
+	    fillColor: "rgba(220,220,220,0.2)",
+	    strokeColor: "rgba(220,220,220,1)",
+	    pointColor: "#F7464A",
+	    pointStrokeColor: "#fff",
+	    pointHighlightFill: "#fff",
+	    pointHighlightStroke: "rgba(220,220,220,1)",
+	    data: [
+		<?php
+		foreach($this->data AS $data){
+			echo floor($data['Balance']).",";
+		}
+		?>
+		]
+	},
+	{
+	    label: "Profit",
+	    fillColor: "rgba(151,187,205,0.2)",
+	    strokeColor: "rgba(151,187,205,1)",
+	    pointColor: "#46F74A",
+	    pointStrokeColor: "#fff",
+	    pointHighlightFill: "#fff",
+	    pointHighlightStroke: "rgba(151,187,205,1)",
+	    data: [
+		<?php
+		foreach($this->data AS $data){
+			echo floor($data['Profit']).",";
+		}
+		?>
+		]
+	},
+
+	/*{
+	    label: "In",
+	    fillColor: "rgba(151,187,205,0.2)",
+	    strokeColor: "rgba(151,187,205,1)",
+	    pointColor: "#46F74A",
+	    pointStrokeColor: "#fff",
+	    pointHighlightFill: "#fff",
+	    pointHighlightStroke: "rgba(151,187,205,1)",
+	    data: [
+		<?php
+		foreach($this->data AS $data){
+			echo floor($data['In']).",";
+		}
+		?>
+		]
+	},
+	{
+	    label: "Out",
+	    fillColor: "rgba(151,187,205,0.2)",
+	    strokeColor: "rgba(151,187,205,1)",
+	    pointColor: "#464AF7",
+	    pointStrokeColor: "#fff",
+	    pointHighlightFill: "#fff",
+	    pointHighlightStroke: "rgba(151,187,205,1)",
+	    data: [
+		<?php
+		foreach($this->data AS $data){
+			echo floor($data['Out']).",";
+		}
+		?>
+		]
+	}*/
+	]
+	};
+
+
+
+    function redraw(canvas){
+        var myChart = new Chart(canvas.getContext("2d")).Line(data,options);   
+        canvas.width  = canvas.parentNode.offsetWidth;
+        canvas.height = canvas.parentNode.offsetHeight;       
+    }
+
+
+    var canvas = document.getElementById("canvas");
+    window.addEventListener("resize", redraw(canvas));
+    redraw(canvas);
+    
+</script>

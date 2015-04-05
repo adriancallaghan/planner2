@@ -1,0 +1,144 @@
+
+
+<?php $this->headTitle('Charts'); ?>
+
+
+<div class='row'>
+
+    <div class="span12">
+                
+	<ul class="nav nav-pills nav-stacked span2">
+		<li class="nav-header">Charts</li>
+		<li>
+		    <a href="<?php echo $this->url('chart',array('action'=>'index'));?>">Home</a>
+		</li>
+		<li class="active">
+		    <a href='<?php echo $this->url('chart',array('action'=>'month'));?>' title='Month Chart'>
+		        Month
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'year'));?>' title='Year Chart'>
+		        Year
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
+		        Average
+		    </a>            
+		</li>
+		<li>
+		    <a href='<?php echo $this->url('chart',array('action'=>'activity'));?>' title='Activity Chart'>
+		        Activity
+		    </a>         
+		</li>
+	    </ul>
+
+
+        <div class="pagination pull-right"> 
+            <ul>
+                <?php foreach($this->months AS $month): ?>
+
+                    <li 
+                        class="<?php echo $this->today->format('Y-m')==$month->format('Y-m') ? 'active' : ($month->format('Y-m')=='2012-08' ? 'disabled' : ''); ?>" 
+                        >
+                        <a href="<?php echo $month->format('Y-m')=='2012-08' ? '#' : $this->url('chart', array('action'=>'month','datestamp'=>$month->format('Y-m')));?>" >
+                            <?php echo $month->format('M Y'); ?>
+                        </a>
+                    </li>
+
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        
+    </div>
+    
+<?php
+
+
+	function random_color_part() {
+	    return str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
+	}
+
+	function random_color() {
+	    return random_color_part() . random_color_part() . random_color_part();
+	}
+
+
+	$breakdown = array();
+
+	foreach($this->statement AS $date) {
+
+		if (count($transactions = $date->getTransactions())>0){
+			foreach($transactions AS $transaction) {
+				if ($transaction->active && $transaction->amount<0){
+
+					if (!isset($breakdown[$transaction->payment->id])){
+						$breakdown[$transaction->payment->id] = array('title'=>"{$transaction->payment->account->name} {$transaction->payment->description}", 'total'=>0,'color'=>random_color());
+					}
+					$breakdown[$transaction->payment->id]['total']+=(float) $transaction->amount;
+				
+				}
+
+			}
+		}
+	}
+
+	?>
+    
+    
+    <div class="span10">
+        <canvas id="canvas" width="800" height="580"></canvas>
+    </div>
+
+    <div class="span2">
+
+ 	<?php foreach ($breakdown AS $paymentId=>$paymentData){ 
+		echo "<span class='label' style='background:#{$paymentData['color']};'>{$paymentData['title']} &pound;{$paymentData['total']}</span><br />";
+	} ?>
+
+
+    </div>
+    
+    <div class="span6 offset2">
+        <h1>Month Graph</h1>
+        <p>
+            Graph shows <?php echo $this->statement->getStatementTitle(); ?>'s outgoings.<br />
+	    Start: &pound;<?php echo number_format($this->statement->getBalance($this->statement->getStart()->getDate()),2); ?><br />
+	    Closing: &pound;<?php echo number_format($this->statement->getBalance($this->statement->getEnd()->getDate()),2); ?><br />
+	    Variant: &pound;<?php echo number_format($this->statement->getBalance($this->statement->getStart()->getDate())- $this->statement->getBalance($this->statement->getEnd()->getDate()),2); ?>
+        </p>
+    </div>
+
+</div>
+        
+<script type="text/javascript">
+
+
+	var data = [
+	    <?php foreach ($breakdown AS $paymentId=>$paymentData){ ?>
+		{
+			value: <?php echo (int) $paymentData['total']; ?>,
+			color:"#<?php echo $paymentData['color']; ?>",
+			highlight: "#FF5A5E",
+			label: "<?php echo $paymentData['title']; ?>"
+		    },
+
+
+	    <?php } ?>
+	]
+
+
+
+    function redraw(canvas){
+        var myChart = new Chart(canvas.getContext("2d")).Pie(data);   
+        canvas.width  = canvas.parentNode.offsetWidth;
+        canvas.height = canvas.parentNode.offsetHeight;       
+    }
+
+
+    var canvas = document.getElementById("canvas");
+    window.addEventListener("resize", redraw(canvas));
+    redraw(canvas);
+    
+</script>

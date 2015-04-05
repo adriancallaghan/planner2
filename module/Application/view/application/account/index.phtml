@@ -22,7 +22,7 @@
             echo $this->paginationControl(
                 // the paginator admin
                 $this->paginator,
-                'sliding',
+                'Sliding',
                 // the partial to use to render the control
                 array('partial/paginator.phtml', 'Account'),
                 // the route to link to when a user clicks a control link
@@ -40,46 +40,72 @@
         <table class="table table-striped table-hover table-bordered">
             <tr>
                 <th>Name</th>
-                <th>Status</th>
-                <th>Created</th>
                 <th>Payments</th>
-                <th><a href="<?php echo $this->url('accounts', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th>
             </tr>
             <?php foreach ($this->paginator as $account) : ?>
                 <tr>
-                    <td><?php echo $this->escapeHtml($account->name);?></td>
-                    <td><?php echo $account->active ? '<span class="badge badge-success">Enabled</span>' : '<span class="badge badge-important">Disabled</span>'; ?></td> 
-                    <td><?php echo $this->escapeHtml($account->created->format('Y-m-d'));?></td>
-                    <td>
-                        <?php
-                        if ($payments = $account->getPayments()) {
-                            foreach($payments AS $payment) : ?>
+                         <td>
+                         
+                                <div class="btn-group pull-right">  
+                                        <a href="<?php echo $this->url('accounts', array('action'=>'add'));?>" class="btn btn-mini"><i class="icon-plus"></i>                          
+                                        <a href="<?php echo $this->url('accounts',array('action'=>'edit', 'id' => $account->id));?>" class="btn btn-mini"><i class="icon-pencil"></i></a>
+                                        <!--a href="<?php echo $this->url('accounts',array('action'=>'delete', 'id' => $account->id));?>" class=""btn btn-mini"><i class="icon-trash"></i></a--> 
+                                        <a href="<?php echo $this->url('accounts',array('action'=>'activity', 'id' => $account->id));?>" class="btn btn-mini">
+                                                <i class="icon-list"></i>
+                                        </a>
+                                </div>
+                                
                                 <p>
-                                    <div class="btn-group pull-right">   
-                                        
-                                        <a href="<?php echo $this->url('payments',array('action'=>'add', 'id' => $account->id));?>" class="btn btn-mini">
-                                            <i class="icon-plus"></i>
-                                        </a>                                        
-                                        <a href="<?php echo $this->url('payments',array('action'=>'edit', 'id' => $payment->id));?>" class="btn btn-mini">
-                                            <i class="icon-pencil"></i>
-                                        </a>
-                                        <a href="<?php echo $this->url('payments',array('action'=>'delete', 'id' => $payment->id));?>" class="btn btn-mini">
-                                            <i class="icon-trash"></i>
-                                        </a>
-                                    </div>
-                                    &pound;<?php echo $payment->amount; ?> <?php echo $payment->description; ?>
+                                        <?php echo $this->escapeHtml($account->name);?>
+
+                                        <span style="color:<?php echo $amounts[$account->id]['total']<0 ? 'red' : 'green'; ?>;">
+                                                &pound;<?php echo number_format($amounts[$account->id]['total'],2); ?>
+                                        </span>
                                 </p>
-                            <?php     
-                            endforeach;     
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <div class="btn-group pull-right">                            
-                            <a href="<?php echo $this->url('accounts',array('action'=>'edit', 'id' => $account->id));?>" class="btn"><i class="icon-pencil"></i></a>
-                            <a href="<?php echo $this->url('accounts',array('action'=>'delete', 'id' => $account->id));?>" class="btn"><i class="icon-trash"></i></a> 
-                        </div>
-                    </td>
+                                
+                                
+                                
+                        </td>
+
+                        <td>
+                                <?php
+                                if (count($payments = $account->getPayments())>0) {
+                                    foreach($payments AS $payment) : ?>
+                                        <p>
+                                                <div class="btn-group pull-right">   
+
+                                                        <a href="<?php echo $this->url('payments',array('action'=>'add', 'id' => $account->id));?>" class="btn btn-mini">
+                                                            <i class="icon-plus"></i>
+                                                        </a>                                        
+                                                        <a href="<?php echo $this->url('payments',array('action'=>'edit', 'id' => $payment->id));?>" class="btn btn-mini">
+                                                            <i class="icon-pencil"></i>
+                                                        </a>
+                                                        <!--a href="<?php echo $this->url('payments',array('action'=>'delete', 'id' => $payment->id));?>" class="btn btn-mini">
+                                                            <i class="icon-trash"></i>
+                                                        </a-->
+                                                        <a href="<?php echo $this->url('payments',array('action'=>'activity', 'id' => $payment->id));?>" class="btn btn-mini">
+                                                                <i class="icon-list"></i>
+                                                        </a>
+                                                </div>
+
+                                                <p class="<?php echo !$payment->active ? 'muted' : ''; ?> desc">
+                                                        <?php //echo $payment->amount; ?>
+                                                        <?php echo $payment->description; ?>                                        
+                                                        <span style="color:<?php echo $amounts[$account->id][$payment->id][0]['amount']<0 ? 'red' : 'green'; ?>;">
+                                                                &pound;<?php echo number_format($amounts[$account->id][$payment->id][0]['amount'],2); ?>
+                                                        </span>
+                                                </p>
+                                             
+
+                                        </p>
+                                    <?php     
+                                    endforeach;     
+                                } else { ?>
+                                        <a href="<?php echo $this->url('payments',array('action'=>'add', 'id' => $account->id));?>" class="btn btn-mini">
+                                   		<i class="icon-plus"></i>
+                                        </a>   
+                                <?php } ?>
+                        </td>
                 </tr>
             <?php endforeach; ?>
         </table>

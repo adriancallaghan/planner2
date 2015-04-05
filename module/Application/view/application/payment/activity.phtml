@@ -1,0 +1,42 @@
+
+
+<div class="row">
+    
+    <table class="table table-bordered table-hover span12">
+        <tr>
+            <th></th>
+            <th colspan="2">
+                <center>
+                <h4>
+                   <?php echo $this->total[0]['Account'].'  &pound;'.number_format($this->total[0]['Amount'],2); ?>
+                </h4>
+                </center>
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+             <!--th><?php echo implode('</th><th>',array_keys($this->transactions[0])); ?></th-->
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Comment</th>
+        </tr>
+        <?php foreach($this->transactions AS $row): ?>
+            <tr>
+ 
+                <td><?php echo $this->escapeHtml($row['Date']);?></td>
+                <td><?php echo "&pound;&nbsp;".number_format($row['Amount'],2);?></td>
+                <td><?php echo $this->escapeHtml($row['Payment']);?></td>
+                <td><?php echo $this->escapeHtml($row['Comment']);?></td>
+                <!--td><?php echo $this->escapeHtml($row['Account']);?></td-->
+
+            </tr>
+        <?php endforeach; ?>
+    </table>
+
+</div>
+
+
+
+
+

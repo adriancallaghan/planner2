@@ -7,17 +7,25 @@
            
     <div class="span4 pull-left">
         <h4>
-            <a href='<?php echo $this->url('chart',array('action'=>'average', 'datestamp' => $this->today->format('Y-m')));?>' title='<?php echo $this->statement->getStatementTitle(); ?>'>
+            <!--a href='<?php echo $this->url('statement',array('action'=>'activity', 'datestamp' => $this->today->format('Y-m')));?>' title='<?php echo $this->statement->getStatementTitle(); ?>'-->
                 <?php echo $this->statement->getStatementTitle(); ?>
-            </a>
+            <!--/a-->
         </h4>
         <h5>
-            <span class="icon-list"></span> 
+                <a href="<?php echo $this->url('analysis',array('action'=>'month', 'datestamp' => $this->today->format('Y-m')));?>" class="btn btn-mini">
+                        <i class="icon-picture"></i>
+                </a>
             <?php 
                 //echo (1==($count = $this->paginator->getTotalItemCount())) ? $count.' date' : $count.' date`s'; 
                 echo (1==($count = $this->statement->count())) ? $count.' Day' : $count.' Day`s'; 
             ?>    
-            &pound;<?php echo number_format($this->statement->getBalance($this->statement->getEnd()->getDate()),2); ?>
+            <?php
+            $variation = $this->statement->getBalance($this->statement->getEnd()->getDate())-$this->statement->getBalance($this->statement->getStart()->getDate());
+            ?>
+            <span style="color:<?php echo $variation<0 ? 'red' : 'green'; ?>;">
+                &pound;<?php echo number_format($variation,2); ?>
+            </span>
+            
         </h5>
     </div>
     
@@ -35,8 +43,8 @@
                             <?php echo $month->format('M Y'); ?>
                         </a>
                     </li>
-
                 <?php endforeach; ?>
+                
             </ul>
         </div>
         
@@ -49,7 +57,6 @@
         <table class="table table-striped table-hover table-bordered">
             <tr>
                 <th>Date</th>
-                <th>Balance</th>
                 <th>Transactions</th>
                 <!--th><a href="<?php echo $this->url('dates', array('action'=>'add'));?>" class="btn btn-mini pull-right"><i class="icon-plus"></i></a></th-->
             </tr>
@@ -62,7 +69,7 @@
                         echo 'success'; 
                     }
 		    else {
-
+/*
 			$ymd_ = $date->getDate()->format('Ymd');
 			$dt_  = $date->getDate();
 			if (
@@ -71,46 +78,66 @@
 			($ymd_ > 20140928 && $ymd_ < 20390719 && $this->statement->getBalance($dt_) < 13000)
 			){
                         	echo 'error';
-			}
+			}*/
                     }
                     
                     ?>"
                 >
-                    <td>
-                        <?php //echo $this->escapeHtml($date->getDate()); ?>                        
-                        <?php echo $this->escapeHtml($date->getDate()->format('D jS \of M')); ?>
-                    </td> 
-                    <td>
-                        &pound;<?php echo number_format($this->statement->getBalance($date->getDate()),2); ?>                        
-                    </td>
-                    <td>     
-                        Total: &pound;<?php echo $date->getTransactionTotal(); ?>
-                        <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini pull-right">
-                            <i class="icon-plus"></i>
-                        </a>
-                        <br />
-                        <br />
+                <td>
+                        <?php //echo $this->escapeHtml($date->getDate()); ?>                 
+
+                        <p><?php echo $this->escapeHtml($date->getDate()->format('D jS \of M')); ?></p>
+                                      
+                                
+                        <p class="lead" style="color:<?php echo $this->statement->getBalance($date->getDate())<0 ? 'red' : ''; ?>;">
+                                &pound;<?php echo number_format($this->statement->getBalance($date->getDate()),2); ?>
+                        </p>                         
+                </td> 
+                <td>
+                        <!--div class="btn-group pull-right">  
+                                <!--a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini"><i class="icon-plus"></i-->                          
+                                <!--a href="<?php echo $this->url('accounts',array('action'=>'delete', 'id' => $account->id));?>" class=""btn btn-mini"><i class="icon-trash"></i></a--> 
+                                <!--a href="<?php echo $this->url('accounts',array('action'=>'activity', 'id' => $account->id));?>" class="btn btn-mini">
+                                        <i class="icon-picture"></i>
+                                </a>
+                        </div-->                              
                         <?php
+                        if (intval($date->getTransactionTotal())!==0) : ?>
+                            
+                                <strong style="color:<?php echo $date->getTransactionTotal()<0 ? 'red' : 'green'; ?>;">
+                                        &pound;<?php echo number_format($date->getTransactionTotal(),2); ?>            
+                                </strong>  
+                                <hr />
+                        <?php endif;
+                        
+                        
                         if ($transactions = $date->getTransactions()) {
                             foreach($transactions AS $transaction) : ?>
-                                <div class="btn-group pull-right">                                       
-                                    <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn btn-mini">
-                                        <i class="icon-pencil"></i>
-                                    </a>
-                                    <!--a href="<?php echo $this->url('transactions',array('action'=>'delete', 'id' => $transaction->id));?>" class="btn btn-mini">
-                                        <i class="icon-trash"></i>
-                                    </a-->
-                                </div>                                
-                                <p>
-                                    <a <?php echo $transaction->active ? "" : "class='muted'"; ?> href='<?php echo $this->url('chart',array('action'=>'activity','id'=>$transaction->payment->id));?>'>
-                                        &pound;<?php echo $transaction->amount; ?>&nbsp;<?php echo $transaction->payment->description; ?>&nbsp;- <?php echo $transaction->payment->account->name; ?>&nbsp;
+                                <div class="btn-group pull-right">           
+                                        <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini">
+                                                <i class="icon-plus">
+                                        </i>                              
+                                        <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn btn-mini">
+                                                <i class="icon-pencil"></i>
+                                        </a>
+                                        <!--a href="<?php echo $this->url('transactions',array('action'=>'delete', 'id' => $transaction->id));?>" class="btn btn-mini">
+                                                <i class="icon-trash"></i>
+                                        </a-->
+                                        <a href="<?php echo $this->url('payments',array('action'=>'activity', 'id' => $transaction->payment->id));?>" class="btn btn-mini">
+                                                <i class="icon-list"></i>
+                                        </a>
+                                </div>  
+                                                             
+                                <p <?php echo $transaction->active ? "" : "class='muted'"; ?>>
+                                        <span style="color:<?php echo $transaction->amount<0 && $transaction->active ? 'red' : ''; ?>;">&pound;<?php echo number_format($transaction->amount,2); ?></span>
+                                        &nbsp;<?php echo $transaction->payment->description; ?>&nbsp;- <?php echo $transaction->payment->account->name; ?>&nbsp;
                                         <?php if ($transaction->comment!=='') : ?>
                                             <small><i><?php echo $transaction->comment; ?></i></small>
                                         <?php endif; ?>
-                                    </a>
                                 </p>                         
                             <?php     
-                            endforeach;     
+                            endforeach; 
+                                 
                         }
                         ?>
                     </td>

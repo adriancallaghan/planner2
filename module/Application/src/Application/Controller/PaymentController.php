@@ -231,5 +231,49 @@ class PaymentController extends AbstractActionController
         );
     }
         
+        
+        public function activityAction(){
+        
+                $em             = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                $thisMonth      = new \DateTime($this->params()->fromRoute('datestamp','now'));
+                
+                $data = $em->createQuery(
+                        'SELECT p.id, p.description AS Payment,a.name AS Account, t.amount AS Amount, d.date AS Date, t.comment as Comment  
+                        FROM Application\Entity\Payment p 
+                        JOIN p.account a 
+                        JOIN p.transactions t 
+                        JOIN t.date d 
+                        WHERE d.date < ?1 AND t.active=1 AND p.id=?2 
+                        ORDER BY t.date DESC
+                        '
+                        )
+                       ->setParameter(1, new \DateTime("{$thisMonth->format('Y M D')} last Friday of this month"))
+                       ->setParameter(2, $this->params()->fromRoute('id',1))
+                       ->getScalarResult();
+                     
+                $total = $em->createQuery(
+                        'SELECT SUM(t.amount) AS Amount, a.name as Account, d.date   
+                        FROM Application\Entity\Date d 
+                        JOIN d.transactions t 
+                        JOIN t.payment p 
+                        JOIN p.account a 
+                        WHERE d.date < ?1 AND t.active=1 AND p.id=?2 
+                        ORDER BY d.date ASC
+                        '
+                        )
+                       ->setParameter(1, new \DateTime("{$thisMonth->format('Y M D')} last Friday of this month"))
+                       ->setParameter(2, $this->params()->fromRoute('id',1))
+                       ->getScalarResult();       
+                       
+                return new ViewModel(array(
+                    'transactions'      => $data,
+                    'total'             => $total
+                ));
+                
+        
+        
+        
+        
+        }
     
 }

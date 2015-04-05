@@ -37,11 +37,12 @@ class AccountForm extends Form
                     '1' => '1',
                 ),
                 'value'=>'1',
+                'type'  => 'hidden',
             ),
-            'options' => array(
+            /*'options' => array(
                 'label' => 'Active',
                 'autocomplete'=>'off',                
-            ),
+            ),*/
         ));
         $this->add(array(
             'name' => 'submit',

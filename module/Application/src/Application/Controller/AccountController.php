@@ -35,16 +35,43 @@ class AccountController extends AbstractActionController
         
         // set the current page to what has been passed in query string, or to 1 if none set
         $paginator
+		->setPageRange(4)
                 ->setCurrentPageNumber(
                     (int)$this->params()->fromQuery('page', 1)
                 )
                 ->setItemCountPerPage(6);
 
+        $amounts        = array();
+        $accounts       = $paginator->getCurrentItems();
+        foreach($accounts AS $account){
+                
+                $amounts[$account->id] = array();
+                if (count($payments = $account->getPayments())>0){
+                        foreach($payments AS $payment){
+                
+                                $data = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->createQuery(
+                                  '
+                                      SELECT SUM(t.amount) AS amount, AVG(t.amount) AS average 
+                                      FROM Application\Entity\Transaction t 
+                                      WHERE t.active=1 AND t.payment=?1
+                                  '
+                                  )
+                                  ->setParameter(1,$payment->id)
+                                  ->getScalarResult();
+                                 $amounts[$account->id][$payment->id] = $data;
+                                 $amounts[$account->id]['total']+= $data[0]['amount'];
+                        }
+                } 
+
+        }
+
+        
         
         return new ViewModel(array(
-            'paginator' => $paginator,
-            'title'     => 'Accounts',
-            'flashMessages' => $this->flashMessenger()->getMessages(),
+            'paginator'         => $paginator,
+            'title'             => 'Accounts',
+            'amounts'           => $amounts,
+            'flashMessages'     => $this->flashMessenger()->getMessages(),
         ));
         
     }
@@ -73,7 +100,7 @@ class AccountController extends AbstractActionController
             //$this->flashMessenger()->addMessage(array('alert-error'=>'Sorry, Error.')); 
 
             // Redirect to list of accounts
-            return $this->redirect()->toRoute('accounts');
+            return $this->redirect()->toRoute('payments',array('action'=>'add','id'=>$account->id));
         }
         
         
@@ -173,7 +200,49 @@ class AccountController extends AbstractActionController
         );
     }
         
-    
+    public function activityAction(){
+        
+                $em             = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                $thisMonth      = new \DateTime($this->params()->fromRoute('datestamp','now'));
+                
+                $data = $em->createQuery(
+                        'SELECT p.id, p.description AS Payment,a.id AS AccountId, a.name AS AccountName, t.amount AS Amount, d.date AS Date, t.comment as Comment  
+                        FROM Application\Entity\Payment p 
+                        JOIN p.account a 
+                        JOIN p.transactions t 
+                        JOIN t.date d 
+                        WHERE d.date < ?1 AND t.active=1 AND a.id=?2 
+                        ORDER BY t.date DESC
+                        '
+                        )
+                       ->setParameter(1, new \DateTime("{$thisMonth->format('Y M D')} last Friday of this month"))
+                       ->setParameter(2, $this->params()->fromRoute('id',1))
+                       ->getScalarResult();
+                     
+                $total = $em->createQuery(
+                        'SELECT SUM(t.amount) AS Amount, a.id AS AccountId, a.name AS AccountName, d.date   
+                        FROM Application\Entity\Date d 
+                        JOIN d.transactions t 
+                        JOIN t.payment p 
+                        JOIN p.account a 
+                        WHERE d.date < ?1 AND t.active=1 AND a.id=?2 
+                        ORDER BY d.date ASC
+                        '
+                        )
+                       ->setParameter(1, new \DateTime("{$thisMonth->format('Y M D')} last Friday of this month"))
+                       ->setParameter(2, $this->params()->fromRoute('id',1))
+                       ->getScalarResult();       
+                       
+                return new ViewModel(array(
+                    'transactions'      => $data,
+                    'total'             => $total
+                ));
+                
+
+
+
+
+        }
     
     
         

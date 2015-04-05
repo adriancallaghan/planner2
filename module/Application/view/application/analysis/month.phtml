@@ -1,0 +1,145 @@
+
+
+<?php $this->headTitle('Charts'); ?>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+<div class='row'>
+
+    <div class="span4" id="pie_chart"></div>  
+     
+    <div class="span8" id="chartExponential"></div>
+    
+    
+     <div class="span12" id="chartCalendar"></div> 
+     
+     <div class="span12" id="areaChart"></div>    
+    
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Date');
+        data.addColumn('number', 'Balance');
+        data.addRows([
+	    <?php foreach ($monthbreakdown AS $paymentId=>$paymentData){ 
+	            if ((int)$paymentData['total']<0){
+	                $val = abs((int) $paymentData['total']);
+	                echo "['{$paymentData['title']}',$val],";
+	                }
+	    } ?>
+	]);
+
+        // Set chart options
+        var options = {'title':'<?php echo $this->statement->getStatementTitle(); ?>`s outgoings.',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+    
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Balance', 'Day'],
+          <?php foreach ($ydates AS $ydate){ 
+
+                echo "[ {$ydate['Balance']}, {$ydate['Date']->format('y-m-d')}],";
+
+          } ?>
+        ]);
+
+        var options = {
+          hAxis: {minValue: 0, maxValue: 15},
+          vAxis: {minValue: 0, maxValue: 15},
+          chartArea: {width:'50%'},
+          trendlines: {
+            0: {
+              type: 'linear',
+              showR2: true,
+              visibleInLegend: true
+            }
+          }
+        };
+
+
+        options.trendlines[0].type = 'exponential';
+        options.colors = ['#6F9654'];
+
+        var chartExponential = new google.visualization.ScatterChart(document.getElementById('chartExponential'));
+        chartExponential.draw(data, options);
+      }
+    </script>
+
+
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["calendar"]});
+      google.setOnLoadCallback(drawChart);
+
+   function drawChart() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'date', id: 'Date' });
+       dataTable.addColumn({ type: 'number', id: 'Balance' });
+       dataTable.addRows([
+          
+          <?php foreach ($ydates AS $ydate){ 
+
+                echo "[ new Date({$ydate['Date']->format('Y,m,d')}), {$ydate['Balance']}],";
+
+          } ?>
+          
+        ]);
+
+       var chart = new google.visualization.Calendar(document.getElementById('chartCalendar'));
+
+       var options = {
+         title: "Balances",
+         height: 450,
+       };
+
+       chart.draw(dataTable, options);
+   }
+   
+    </script>
+
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2013',  1000,      400],
+          ['2014',  1170,      460],
+          ['2015',  660,       1120],
+          ['2016',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('areaChart'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
+</div>

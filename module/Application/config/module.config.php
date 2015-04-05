@@ -15,12 +15,12 @@ return array(
         'invokables' => array(
             'Application\Controller\Index'   => 'Application\Controller\IndexController',
             'Application\Controller\Statement'   => 'Application\Controller\StatementController',
-            'Application\Controller\Chart'   => 'Application\Controller\ChartController',
+            'Application\Controller\Analysis'   => 'Application\Controller\AnalysisController',
             'Application\Controller\Date' => 'Application\Controller\DateController',
             'Application\Controller\Transaction' => 'Application\Controller\TransactionController',
             'Application\Controller\Payment' => 'Application\Controller\PaymentController',
             'Application\Controller\Account' => 'Application\Controller\AccountController',
-            'Application\Controller\Tag' => 'Application\Controller\TagController',
+            #'Application\Controller\Tag' => 'Application\Controller\TagController',
         ),
     ),
     'router' => array(
@@ -62,21 +62,23 @@ return array(
                 ),
             ),
             
-            'chart' => array(
+            
+            
+            'analysis' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route'    => '/chart[/:action][/:datestamp][/:id][/]',
+                    'route'    => '/analysis[/:action][/:datestamp][/:id][/]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'datestamp'     => '[0-9]{1,4}-[0-9]{1,2}',
                         'id'     => '[0-9]{1,6}',
                     ),
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Chart',
+                        'controller' => 'Application\Controller\Analysis',
                         'action'     => 'index',
                     ),
                 ),
-            ),   
+            ),  
             
             'dates' => array(
                 'type'    => 'segment',
@@ -162,11 +164,11 @@ return array(
                 'label' => 'Statement',
                 'route' => 'statement',                
             ),
-            'Chart' => array(
+            /*'Chart' => array(
                 'label' => 'Chart',
                 'route' => 'chart',                
             ),
-            /*
+            
             'dates' => array(
                 'label' => 'Dates',
                 'route' => 'dates',
@@ -187,7 +189,7 @@ return array(
                         'action' => 'delete',
                     ),
                 )
-            ), */
+            ), 
             'transactions' => array(
                 'label' => 'Transactions',
                 'route' => 'transactions',
@@ -229,7 +231,7 @@ return array(
                         'action' => 'delete',
                     ),
                 )
-            ), 
+            ), */
             'accounts' => array(
                 'label' => 'Accounts',
                 'route' => 'accounts',

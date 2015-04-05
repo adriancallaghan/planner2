@@ -1,0 +1,68 @@
+
+
+<div class="row">
+    
+   
+    <ul class="nav nav-pills nav-stacked span2">
+        <li class="nav-header">Charts</li>
+        <li class="active">
+            <a href="<?php echo $this->url('chart',array('action'=>'index'));?>">Home</a>
+        </li>
+        <li>
+            <a href='<?php echo $this->url('chart',array('action'=>'month'));?>' title='Month Chart'>
+                Month
+            </a>            
+        </li>
+	<li>
+            <a href='<?php echo $this->url('chart',array('action'=>'year'));?>' title='Year Chart'>
+                Year
+            </a>            
+        </li>
+	<li>
+            <a href='<?php echo $this->url('chart',array('action'=>'average'));?>' title='Average Chart'>
+                Average
+            </a>            
+        </li>
+        <li>
+            <a href='<?php echo $this->url('chart',array('action'=>'activity'));?>' title='Activity Chart'>
+                Activity
+            </a>         
+        </li>
+    </ul>
+        
+        
+   
+    <table class="table table-condensed table-bordered table-hover span10">
+        <tr>
+             <th><?php echo implode('</th><th>',array_keys($this->data[0])); ?></th>           
+        </tr>
+        <?php foreach($this->data AS $row): ?>
+            <tr>
+                <?php foreach($row AS $key=>$val) : ?>
+                    
+                    <td>
+                        <a href='<?php echo $this->url('chart',array('action'=>'activity','id'=>$row['id']));?>'>
+                        <?php
+                        switch($key){
+
+                            case 'Amount':
+                            case 'Average':
+                                echo "&pound;&nbsp;".number_format($val,2);
+                                break;
+                            default:
+                                echo $val;
+                        }
+                        ?>
+                        </a>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+
+</div>
+
+
+
+
+
