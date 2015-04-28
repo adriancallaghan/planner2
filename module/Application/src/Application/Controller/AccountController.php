@@ -21,14 +21,23 @@ class AccountController extends AbstractActionController
     public function indexAction()
     {
                 
-        
         $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $accountEntity = $em->getRepository('Application\Entity\Account');
+        $accountEntity  = $em->getRepository('Application\Entity\Account');
+        $paymentDao     = $em->getRepository('Application\Entity\Payment');  
+        
+        $paymentTitles = array();
+        foreach ($paymentDao->findBy(array(),array('account'=>'DESC')) AS $v){
+            $paymentTitles[$v->id] = "{$v->account->name} - {$v->description}";
+        }         
 
-        $accounts = $accountEntity->findAll();
+        if (($filter = $this->params()->fromQuery('filter', false)) && ($paymentId = array_search($filter, $paymentTitles)) && ($payment = $paymentDao->find($paymentId))){                
+                $accounts       = array ('0'=> $payment->account);
+        } else {
+                $accounts       = $accountEntity->findAll();
+        }
 
-        $collection = new Collections\ArrayCollection($accounts);
+        $collection     = new Collections\ArrayCollection($accounts);
 
         // Create the paginator itself
         $paginator = new Paginator(new Adapter($collection));
@@ -66,12 +75,12 @@ class AccountController extends AbstractActionController
         }
 
         
-        
         return new ViewModel(array(
             'paginator'         => $paginator,
             'title'             => 'Accounts',
             'amounts'           => $amounts,
             'flashMessages'     => $this->flashMessenger()->getMessages(),
+            'paymentTitles'     => $paymentTitles,
         ));
         
     }

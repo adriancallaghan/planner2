@@ -119,7 +119,14 @@ class TransactionController extends AbstractActionController
 
             // Redirect to list of transactions
             //return $this->redirect()->toRoute('transactions');
-            return $this->redirect()->toRoute('home');
+            //return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute(
+                    'statement',
+                    array(
+                        'datestamp'=>$date->getDate()->format('Y-m-d'),
+                        //'hash'=>'#'.$dateTime->format('mj')
+                    )
+                );
         }
         
         
@@ -215,7 +222,15 @@ class TransactionController extends AbstractActionController
                 }
                 
                 //return $this->redirect()->toRoute('transactions');
-                return $this->redirect()->toRoute('home');
+                //return $this->redirect()->toRoute('home');
+        
+                return $this->redirect()->toRoute(
+                    'statement',
+                    array(
+                        'datestamp'=>$date->getDate()->format('Y-m-d'),
+                        //'hash'=>'#'.$dateTime->format('mj')
+                    )
+                );
 
 
             } else {

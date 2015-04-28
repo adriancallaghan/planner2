@@ -5,7 +5,7 @@
 
 <div class="row">
            
-    <div class="span8 pull-left">
+    <div class="span4 pull-left">
         <h4><?php echo $this->escapeHtml($this->title); ?></h4>
         <h5>
             <span class="icon-list"></span> 
@@ -15,7 +15,14 @@
         </h5>
     </div>
     
-    
+
+        <form class="form-search" class="span4 pull-left" action="" method="get">
+                <input type="text" name="filter" class="input-large search-query typeahead" autocomplete="off" id="search" data-provide="typeahead" placeholder="Search payment" value="<?php echo $_GET['filter']!=="" ? $_GET['filter'] : ''; ?>" style="padding: 11px 19px;font-size: 17.5px;">
+                <button type="submit" class="btn btn-large">Search</button>
+                <button type="submit" class="btn btn-large" name="filter">Clear</button>
+        </form>
+
+        
     <div class="span4 pull-right">
         <div class="pagination pagination-right">
             <?php // add at the end of the file after the table
@@ -112,5 +119,22 @@
         
     </div>
     
+       <script type="text/javascript">
+
+    $(document).ready(function(){
+
+        var accounts = [
+                <?php foreach ($this->paymentTitles AS $paymentTitle){
+                        echo "'$paymentTitle',";
+                }
+                ?>
+        
+        ];
+ 
+        $('#search').typeahead({source: accounts});
+
+    });  
+
+    </script>
     
 </div>

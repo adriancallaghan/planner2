@@ -111,12 +111,12 @@
                         <?php endif;
                         
                         
-                        if ($transactions = $date->getTransactions()) {
+                        if (count($transactions = $date->getTransactions()) >0) {
                             foreach($transactions AS $transaction) : ?>
                                 <div class="btn-group pull-right">           
                                         <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini">
-                                                <i class="icon-plus">
-                                        </i>                              
+                                                <i class="icon-plus"></i>
+                                        </a>                              
                                         <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn btn-mini">
                                                 <i class="icon-pencil"></i>
                                         </a>
@@ -138,8 +138,12 @@
                             <?php     
                             endforeach; 
                                  
-                        }
-                        ?>
+                        } else { ?>
+                                <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini pull-right">
+                                        <i class="icon-plus"></i> 
+                                </a> 
+                        <?php } ?>
+                        
                     </td>
                     <!--td>
                         <div class="btn-group pull-right">                            
