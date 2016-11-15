@@ -57,6 +57,11 @@ class Date
      * @ORM\Column(name="created", type="datetime")
      */
     protected $created;
+
+    /**
+     * @ORM\Column(name="checked",type="boolean")
+     */
+    protected $checked;
     
 
     public function __construct() {
@@ -132,6 +137,19 @@ class Date
         
         return $this;
     }
+
+    public function setChecked($checked = false){
+        $this->checked = $checked;
+        return $this;
+    }
+    
+    public function getChecked(){
+        
+        if (!isset($this->checked)){
+            $this->setChecked();
+        }
+        return $this->checked;
+    }  
     
     
     /** 

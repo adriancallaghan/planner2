@@ -2,6 +2,39 @@
 
 <?php $this->headTitle($this->statement->getStatementTitle()); ?>
 
+<style>
+
+.table tbody tr.checked td {
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+.table tbody tr.checked td div.transactions-listing, .table tbody tr.checked hr{
+    display:none;
+}
+
+.table tbody tr.checked td p.amt, .table tbody tr.checked td p.amt-negative {
+    font-size:12px;
+}
+
+.date {
+
+}
+
+p.amt {
+    font-size: 20px;
+    color:#00dd00;
+}
+
+.amt-negative {
+    font-size: 20px;
+    color:#dd0000;
+}
+
+
+
+</style>
+
 
 <div class="row">
            
@@ -37,7 +70,7 @@
                 <?php foreach($this->months AS $month): ?>
 
                     <li 
-                        class="<?php echo $this->today->format('Y-m')==$month->format('Y-m') ? 'active' : ($month->format('Y-m')=='2012-08' ? 'disabled' : ''); ?>" 
+                        class="<?php echo $this->today->format('Y-m')==$month->format('Y-m') ? 'active' : ($month->format('Y-m')=='2016-10' ? 'disabled' : ''); ?>" 
                         >
                         <a href="<?php echo $month->format('Y-m')=='2012-08' ? '#' : $this->url('statement', array('datestamp'=>$month->format('Y-m-d')));?>" >
                             <?php echo $month->format('M Y'); ?>
@@ -63,34 +96,28 @@
             <?php foreach ($this->statement as $date) : ?>
                 <tr 
                     id="<?php echo $date->getDate()->format('mj'); ?>" 
-                    class="<?php               
+                    class="<?php   
+
+                    if ($date->getChecked()) { 
+                        echo 'checked ';
+                    }
+
+                    $ymd_ = $date->getDate()->format('Ymd');
+                    $dt_  = $date->getDate();            
 		    
                     if ($this->today->format('Ymj')==$date->getDate()->format('Ymj')){
-                        echo 'success'; 
-                    }
-		    else {
-/*
-			$ymd_ = $date->getDate()->format('Ymd');
-			$dt_  = $date->getDate();
-			if (
-			($ymd_ < 20140719 && $this->statement->getBalance($dt_) < -450) ||
-			($ymd_ > 20140719 && $ymd_ < 20140928 && $this->statement->getBalance($dt_) < 10000) ||
-			($ymd_ > 20140928 && $ymd_ < 20390719 && $this->statement->getBalance($dt_) < 13000)
-			){
-                        	echo 'error';
-			}*/
-                    }
+                        echo 'success '; 
+                    } elseif ($this->statement->getBalance($dt_) < -2700){ 
+                        echo 'error ';
+        			} 
                     
-                    ?>"
+                ?>"
                 >
                 <td>
                         <?php //echo $this->escapeHtml($date->getDate()); ?>                 
-
-                        <p><?php echo $this->escapeHtml($date->getDate()->format('D jS \of M')); ?></p>
-                                      
-                                
-                        <p class="lead" style="color:<?php echo $this->statement->getBalance($date->getDate())<0 ? 'red' : ''; ?>;">
-                                &pound;<?php echo number_format($this->statement->getBalance($date->getDate()),2); ?>
+                        <p class="date"><?php echo $this->escapeHtml($date->getDate()->format('D jS \of M')); ?></p> 
+                        <p class="<?php echo $this->statement->getBalance($date->getDate())<0 ? 'amt-negative' : 'amt' ?>">
+                            &pound;<?php echo number_format($this->statement->getBalance($date->getDate()),2); ?>
                         </p>                         
                 </td> 
                 <td>
@@ -101,48 +128,67 @@
                                         <i class="icon-picture"></i>
                                 </a>
                         </div-->                              
-                        <?php
-                        if (intval($date->getTransactionTotal())!==0) : ?>
+                        <?php if (intval($date->getTransactionTotal())!==0) : ?>
                             
+                            <div class="pull-left">
                                 <strong style="color:<?php echo $date->getTransactionTotal()<0 ? 'red' : 'green'; ?>;">
-                                        &pound;<?php echo number_format($date->getTransactionTotal(),2); ?>            
+                                    &pound;<?php echo number_format($date->getTransactionTotal(),2); ?>            
                                 </strong>  
-                                <hr />
-                        <?php endif;
+                            </div>
+
+                        <?php endif; ?>    
+
+                        <div class="pull-right">
+
+                            <?php if ($date->getChecked()) { ?>
+                                <a href="<?php echo $this->url('transactions',array('action'=>'uncheck', 'id' => $date->getId()));?>" class="btn btn-mini">
+                                    <i class="icon-wrench"></i> 
+                                </a> 
+                            <?php } else { ?>
+                                <a href="<?php echo $this->url('transactions',array('action'=>'check', 'id' => $date->getId()));?>" class="btn btn-mini">
+                                    <i class="icon-lock"></i> 
+                                </a> 
+                            <?php } ?>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <?php if (intval($date->getTransactionTotal())!==0) echo "<hr />"; ?>
+
+
                         
+
+                        <?php
                         
                         if (count($transactions = $date->getTransactions()) >0) {
                             foreach($transactions AS $transaction) : ?>
-                                <div class="btn-group pull-right">           
-                                        <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini">
-                                                <i class="icon-plus"></i>
-                                        </a>                              
-                                        <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn btn-mini">
+
+                                <div class="transactions-listing">
+                                    <div class="btn-group pull-right">           
+                                                                        
+                                            <a href="<?php echo $this->url('transactions',array('action'=>'edit', 'id' => $transaction->id));?>" class="btn btn-mini">
                                                 <i class="icon-pencil"></i>
-                                        </a>
-                                        <!--a href="<?php echo $this->url('transactions',array('action'=>'delete', 'id' => $transaction->id));?>" class="btn btn-mini">
-                                                <i class="icon-trash"></i>
-                                        </a-->
-                                        <a href="<?php echo $this->url('payments',array('action'=>'activity', 'id' => $transaction->payment->id));?>" class="btn btn-mini">
+                                            </a>
+                                            <!--a href="<?php echo $this->url('transactions',array('action'=>'delete', 'id' => $transaction->id));?>" class="btn btn-mini">
+                                                    <i class="icon-trash"></i>
+                                            </a-->
+                                            <a href="<?php echo $this->url('payments',array('action'=>'activity', 'id' => $transaction->payment->id));?>" class="btn btn-mini">
                                                 <i class="icon-list"></i>
-                                        </a>
-                                </div>  
-                                                             
-                                <p <?php echo $transaction->active ? "" : "class='muted'"; ?>>
-                                        <span style="color:<?php echo $transaction->amount<0 && $transaction->active ? 'red' : ''; ?>;">&pound;<?php echo number_format($transaction->amount,2); ?></span>
-                                        &nbsp;<?php echo $transaction->payment->description; ?>&nbsp;- <?php echo $transaction->payment->account->name; ?>&nbsp;
-                                        <?php if ($transaction->comment!=='') : ?>
-                                            <small><i><?php echo $transaction->comment; ?></i></small>
-                                        <?php endif; ?>
-                                </p>                         
+                                            </a>
+                                    </div>  
+                                                                 
+                                    <p <?php echo $transaction->active ? "" : "class='muted'"; ?>>
+                                            <span style="color:<?php echo $transaction->amount<0 && $transaction->active ? 'red' : ''; ?>;">&pound;<?php echo number_format($transaction->amount,2); ?></span>
+                                            &nbsp;<?php echo $transaction->payment->description; ?>&nbsp;- <?php echo $transaction->payment->account->name; ?>&nbsp;
+                                            <?php if ($transaction->comment!=='') : ?>
+                                                <small><i><?php echo $transaction->comment; ?></i></small>
+                                            <?php endif; ?>
+                                    </p> 
+                                </div>                        
                             <?php     
                             endforeach; 
                                  
-                        } else { ?>
-                                <a href="<?php echo $this->url('transactions',array('action'=>'add', 'id' => $date->getId()));?>" class="btn btn-mini pull-right">
-                                        <i class="icon-plus"></i> 
-                                </a> 
-                        <?php } ?>
+                        } ?>
                         
                     </td>
                     <!--td>

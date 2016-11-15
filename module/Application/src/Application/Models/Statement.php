@@ -15,7 +15,7 @@ class Statement implements \Iterator, \Countable, ServiceLocatorAwareInterface
     protected $_reversed;
     protected $_statementTitle;
        
-    const START_BALANCE_OFFSET = '381.22'; // start balance
+    const START_BALANCE_OFFSET = '2119.35'; // start balance
 
     public function getServiceLocator() {
         return $this->_serviceLocator;

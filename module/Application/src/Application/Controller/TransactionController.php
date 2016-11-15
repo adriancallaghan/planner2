@@ -244,6 +244,60 @@ class TransactionController extends AbstractActionController
         );
     }
 
+    public function checkAction(){
+
+        $id = (int) $this->params()->fromRoute('id', 0); // id that we deleting, defaults to zero
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');  
+        $date = $em->getRepository('Application\Entity\Date')->find($id);
+        
+        if (!$date) {
+            return $this->redirect()->toRoute('home');
+        }
+        
+
+        // Mark all previous dates
+        $dql    = 'update Application\Entity\Date d set d.checked = 1 WHERE d.date <=?1';
+        $q      = $em->createQuery($dql)->setParameter(1, $date->getDate());
+        $no     = $q->execute();
+                 
+        $this->flashMessenger()->addMessage(array('alert-info'=>'Checked '.$no.' dates'));
+        return $this->redirect()->toRoute(
+            'statement',
+            array(
+                'datestamp'=>$date->getDate()->format('Y-m-d'),
+                //'hash'=>'#'.$dateTime->format('mj')
+            )
+        );
+
+    }
+
+    public function uncheckAction(){
+
+        $id     = (int) $this->params()->fromRoute('id', 0); // id that we deleting, defaults to zero
+        $em     = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');  
+        $date   = $em->getRepository('Application\Entity\Date')->find($id);
+        
+        if (!$date) {
+            return $this->redirect()->toRoute('home');
+        }
+        
+        // Unmark all previous dates
+        $dql    = 'update Application\Entity\Date d set d.checked = 0 WHERE d.date >=?1';
+        $q      = $em->createQuery($dql)->setParameter(1, $date->getDate());
+        $no     = $q->execute();
+                 
+        $this->flashMessenger()->addMessage(array('alert-info'=>'Unchecked '.$no.' dates'));
+        return $this->redirect()->toRoute(
+            'statement',
+            array(
+                'datestamp'=>$date->getDate()->format('Y-m-d'),
+                //'hash'=>'#'.$dateTime->format('mj')
+            )
+        );
+
+    }
+
+
     public function deleteAction()
     {
         
